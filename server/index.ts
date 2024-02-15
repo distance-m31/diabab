@@ -1,35 +1,20 @@
 import express from 'express';
 import cors from 'cors';
-
-type BloodEntry = {
-  glucose: number;
-  hemoglobin: number;
-  timestamp: string;
-};
-
-const entries: BloodEntry[] = [];
+import { auth } from './middleware/auth';
+import loginRouter from './controllers/login';
+import bloodRouter from './controllers/blood';
 
 const app = express();
-
+app.use(express.json());
+app.use('/', auth)
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({}));
 
 app.get('/', (_req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/blooddata', (_req, res) => {
-  res.json(entries);
-});
-
-app.post ('/blooddata', (_req, res) => {
-  res.send('Got a POST request');
-  entries.push({
-    glucose: 0,
-    hemoglobin: 0,
-    timestamp: new Date().toISOString(),
-  });
-}
-);
+app.use('/api/login', loginRouter);
+app.use('/api/blooddata', bloodRouter);
 
 const PORT = process.env.PORT || 3003;
 
