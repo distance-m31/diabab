@@ -75,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
       <Text variant="h5">Do not have an account?</Text>
       <Button
         id="create-new-button"
-        onClick={() => navigate('/create_account')}
+        onClick={() => navigate('/signup')}
       >
         Create a New Account
       </Button>

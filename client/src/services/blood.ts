@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { bloodDataUrl } from '../utils/config'
 
 type BloodData = {
   glucoselevel: number
@@ -10,13 +11,15 @@ type GetBloodData = {
 }
 
 type CreateBloodData = {
-  glucoselevel: number
+  glucose: number
+  carbs: number
 }
 
-export async function createBloodData(data: CreateBloodData) {
+export async function createBloodData(data: CreateBloodData, token: string) {
   try {
-    const response = await axios.post('http://localhost:3003/blooddata', data, {
+    const response = await axios.post(bloodDataUrl, data, {
       headers: {
+        Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
       },
     })
@@ -33,16 +36,14 @@ export async function createBloodData(data: CreateBloodData) {
   }
 }
 
-export async function getBloodData() {
+export async function getBloodData(token: string) {
   try {
-    const { data, status } = await axios.get<GetBloodData>(
-      'http://localhost:3003/blooddata',
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    const { data, status } = await axios.get<GetBloodData>(bloodDataUrl, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json',
+      },
+    })
 
     console.log(JSON.stringify(data, null, 4))
     console.log(status)

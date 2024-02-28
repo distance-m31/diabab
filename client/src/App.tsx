@@ -1,42 +1,47 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
-import { createContext, useState } from 'react'
 import InputBloodValues from './pages/InputBloodValues'
-
-const UserContext = createContext({ user: null, setUser: null })
+import useUserStore from './store'
+import Text from './components/Text'
 
 function App() {
-  const [user, setUser] = useState(null)
-
+  const username = useUserStore((state) => state.username)
+  const token = useUserStore((state) => state.token)
   return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <BrowserRouter>
-            <Routes>
-              <Route
-                path="/signup"
-                element={<SignupPage />}
-              />
-              <Route
-                path="/login"
-                element={<LoginPage />}
-              />
-              <Route
-                path="/blood"
-                element={<InputBloodValues />}
-              />
-              <Route
-                path="/"
-                element={<LoginPage />}
-              />
-            </Routes>
-          </BrowserRouter>
-        </div>
+    <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <Text variant="h1">
+          Welcome {username} token {token}
+        </Text>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/signup"
+              element={<SignupPage />}
+            />
+            <Route
+              path="/login"
+              element={<LoginPage />}
+            />
+            <Route
+              path="/blood"
+              element={
+                username ? <InputBloodValues /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/"
+              element={username ? <Navigate to="/blood" /> : <LoginPage />}
+            />
+            <Route
+              path="*"
+              element={<Navigate to="/" />}
+            />
+          </Routes>
+        </BrowserRouter>
       </div>
-    </UserContext.Provider>
+    </div>
   )
 }
 
