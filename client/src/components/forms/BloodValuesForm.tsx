@@ -1,67 +1,57 @@
+import { FC, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { createBloodData } from '../services/blood'
-import FormTextInput from '../components/FormTextInput'
-import Button from '../components/Button'
-import Text from '../components/Text'
 import { useState } from 'react'
-import useUserStore from '../store'
+
+import FormTextInput from './FormTextInput'
+import Button from '../Button'
+import Text from '../Text'
+
+import { BloodData } from '../../types'
+import { calculateInsulin } from '../../utils/insulinCalc'
 
 const schema = yup.object().shape({
   glucose: yup.number().moreThan(0).lessThan(100).required(),
   sensitivity: yup.number().moreThan(0).required(),
   carbs: yup.number().moreThan(0).required(),
   carbsRatio: yup.number().moreThan(0).required(),
+  timestamp: yup.date().required(),
 })
 
-type FormData = {
-  glucose: number
-  carbs: number
-  carbsRatio: number
-  sensitivity: number
+interface BloodFormProps {
+  bloodValues: BloodData
+  handleBloodValues: (data: BloodData) => void
 }
 
-const InputBloodValues = () => {
+const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
   const [calcResult, setCalcResult] = useState<number>(0)
-  const token = useUserStore((state) => state.token)
 
   const {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<FormData>({
-    defaultValues: {
-      glucose: 5,
-      carbs: 10,
-      carbsRatio: 1,
-      sensitivity: 2,
-    },
+  } = useForm<BloodData>({
+    defaultValues: useMemo(() => props.bloodValues, [props.bloodValues]),
     resolver: yupResolver(schema),
     mode: 'onChange',
   })
 
-  const onSubmit = async (data: FormData) => {
-    console.log(data)
-    const glucoseLevel = data.glucose
-    const sensitivity = data.sensitivity
-    const calculation = glucoseLevel / sensitivity
-    console.log(calculation)
-    setCalcResult(calculation)
-    alert(`You need ${calculation} units of insuline`)
-    const result = await createBloodData(
-      {
-        glucose: data.glucose,
-        carbs: data.carbs,
-      },
-      token
+  const onSubmit = async (data: BloodData) => {
+    const insuline = calculateInsulin(
+      6,
+      data.glucose,
+      data.carbs,
+      data.carbsRatio,
+      data.sensitivity
     )
-    console.log(result)
+    console.log('Insuline', insuline)
+    setCalcResult(insuline)
+    props.handleBloodValues(data)
   }
 
   return (
     <>
-      <Text variant="h1">Insuline calculator</Text>
       <FormTextInput
         label="Glucoce level"
         type="number"
@@ -107,4 +97,4 @@ const InputBloodValues = () => {
   )
 }
 
-export default InputBloodValues
+export default BloodValuesForm

@@ -10,12 +10,14 @@ model User {
 }
 
 model BloodRecord {
-  id        Int      @id @default(autoincrement())
-  glucose   Float
-  carbs     Float    @default(0)
-  timestamp DateTime @map("date")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  id          Int      @id @default(autoincrement())
+  glucose     Float
+  carbs       Float    @default(0)
+  carbsRatio  Float    @default(1)
+  sensitivity Float    @default(1)
+  timestamp   DateTime @map("date")
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
 }
 
 generator client {

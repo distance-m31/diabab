@@ -14,6 +14,9 @@ const bloodRecordSchema = z.object({
     .number({ required_error: 'carbs value is required' })
     .gte(0)
     .lte(300),
+  carbsRatio: z.number().gte(1).lte(100),
+  sensitivity: z.number().gte(1).lte(100),
+  timestamp: z.string().datetime(),
 })
 
 bloodRouter.get('/', userValidate, async (req, res) => {
@@ -22,7 +25,12 @@ bloodRouter.get('/', userValidate, async (req, res) => {
   const entries = await prismaClient.bloodRecord.findMany({
     where: { userId: userId },
   })
-  return res.status(201).json(entries)
+  return res.status(201).json(
+    entries.map((entry) => {
+      const { id, userId, ...rest } = entry
+      return rest
+    })
+  )
 })
 
 bloodRouter.post(
@@ -38,7 +46,9 @@ bloodRouter.post(
       data: {
         glucose: req.body.glucose,
         carbs: req.body.carbs,
-        timestamp: new Date().toISOString(),
+        carbsRatio: req.body.carbsRatio,
+        sensitivity: req.body.sensitivity,
+        timestamp: req.body.timestamp,
         user: {
           connect: {
             id: userId,

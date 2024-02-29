@@ -1,21 +1,17 @@
 import axios from 'axios'
 import { bloodDataUrl } from '../utils/config'
-
-type BloodData = {
-  glucoselevel: number
-  carbs: number
-}
+import { BloodData } from '../types'
 
 type GetBloodData = {
   data: BloodData[]
 }
 
-type CreateBloodData = {
+/* type CreateBloodData = {
   glucose: number
   carbs: number
 }
-
-export async function createBloodData(data: CreateBloodData, token: string) {
+ */
+const createBloodData = async (data: BloodData, token: string) => {
   try {
     const response = await axios.post(bloodDataUrl, data, {
       headers: {
@@ -28,17 +24,17 @@ export async function createBloodData(data: CreateBloodData, token: string) {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.message)
-      return error.message
+      throw new Error('Error creating blood data. ' + error.message)
     }
 
     console.error(error)
-    return error
+    throw new Error('Error creating blood data. Error unknown.')
   }
 }
 
-export async function getBloodData(token: string) {
+const getBloodData = async (token: string) => {
   try {
-    const { data, status } = await axios.get<GetBloodData>(bloodDataUrl, {
+    const { data, status } = await axios.get<BloodData[]>(bloodDataUrl, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json',
@@ -51,10 +47,11 @@ export async function getBloodData(token: string) {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.message)
-      return error.message
+      throw new Error('Error fetching blood data. ' + error.message)
     }
 
-    console.error(error)
-    return error
+    throw new Error('Error fetching blood data. Error unknown.')
   }
 }
+
+export { createBloodData, getBloodData }

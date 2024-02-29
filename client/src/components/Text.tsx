@@ -8,7 +8,14 @@ type TextProps = {
 const Text: React.FC<TextProps> = ({ children, variant, ...props }) => {
   switch (variant) {
     case 'h1':
-      return <h1 {...props}>{children}</h1>
+      return (
+        <h1
+          className="font-bold py-2 px-0"
+          {...props}
+        >
+          {children}
+        </h1>
+      )
     case 'h2':
       return <h2 {...props}>{children}</h2>
     case 'h3':

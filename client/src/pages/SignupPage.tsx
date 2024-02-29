@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import SignupForm from '../components/SignupForm'
+import SignupForm from '../components/forms/SignupForm'
 import { RegisterInput } from '../types'
 import { createUser } from '../services/user'
 import useUserStore from '../store'

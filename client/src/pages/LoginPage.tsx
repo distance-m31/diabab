@@ -1,11 +1,11 @@
-import Header from '../components/Header'
-import LoginForm from '../components/LoginForm'
+import LoginForm from '../components/forms/LoginForm'
 import { LoginInput } from '../types'
 import { login } from '../services/user'
 import useUserStore from '../store'
 import { useNavigate } from 'react-router-dom'
+import Box from '../components/Box'
 
-export default function LoginPage() {
+const LoginPage = () => {
   const navigate = useNavigate()
   const setUsername = useUserStore((state) => state.setUsername)
   const setToken = useUserStore((state) => state.setToken)
@@ -28,15 +28,13 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      <Header
-        heading="Welcome back"
-        paragraph="New here? "
-        linkName="Sign up"
-        linkUrl="/signup"
-      />
-
+    <Box
+      type="border"
+      className="py-4"
+    >
       <LoginForm handleLogin={handleLogin} />
-    </>
+    </Box>
   )
 }
+
+export default LoginPage

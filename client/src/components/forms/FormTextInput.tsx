@@ -26,7 +26,7 @@ const ControlTextInput = <T extends FieldValues>({
         <>
           <label
             htmlFor={name}
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-700 text-sm font-bold mb-1"
           >
             {label}
             <br />
@@ -37,7 +37,7 @@ const ControlTextInput = <T extends FieldValues>({
               onChange(text)
             }}
             type={type ? type : 'text'}
-            className="shadow appearance-none border rounded w-full mb-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="shadow appearance-none border rounded w-full mb-2 py-1 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           {error && <span style={{ color: 'red' }}>{error?.message}</span>}
         </>
