@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { createBloodData, getBloodData } from '../services/blood'
 import Text from '../components/Text'
-import useUserStore from '../store'
 import BloodValuesForm from '../components/forms/BloodValuesForm'
 import BarChart from '../components/BarChart'
 import { BloodData } from '../types'

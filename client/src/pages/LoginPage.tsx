@@ -13,16 +13,21 @@ const LoginPage = () => {
 
   const handleLogin = async (data: LoginInput) => {
     console.log('login', data)
-    const result = await login(data)
 
-    if (result) {
-      console.log('setting states', result)
-      setParams(result.username, result.email, result.token)
-      setLoginData(result)
+    try {
+      const result = await login(data)
+
+      if (result) {
+        console.log('setting states', result)
+        setParams(result.username, result.email, result.token)
+        setLoginData(result)
+      }
+
+      console.log('navigating, with username', username, 'result', result)
+      navigate('/')
+    } catch (error) {
+      console.error('Error:', error)
     }
-
-    console.log('navigating, with username', username, 'result', result)
-    navigate('/')
   }
 
   return (
