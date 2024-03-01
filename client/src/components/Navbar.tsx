@@ -9,7 +9,7 @@ const NavBar: FC = () => {
   const token = useUserStore((state) => state.token)
   const userMessage = () => {
     if (username) {
-      return `User ${username} has logged in`
+      return `User ${username} has logged in ${token}.`
     }
     return 'No user logged in'
   }

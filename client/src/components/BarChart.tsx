@@ -30,27 +30,25 @@ interface BarChartProps {
 }
 
 const BarChart: FC<BarChartProps> = ({ bloodData }) => {
-  console.log('Data in chart', bloodData)
-  /* const data = {
-    labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4', 'Label 5'],
-    datasets: [
-      {
-        label: 'Data Series 1',
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-        data: [12, 19, 25, 15, 20],
-      },
-      {
-        label: 'Sample Data',
-        data: [12, 19, 30, 15, 12],
-        backgroundColor: ['green'],
-      },
-    ],
-  } */
+  const pad = (number: number) => ('0' + number).slice(-2)
+
+  const getDateLabel = (date: Date) => {
+    //return getDateFromString(date.toString())
+    const ret =
+      date.getFullYear() +
+      ' ' +
+      pad(date.getMonth()) +
+      '/' +
+      pad(date.getDay()) +
+      ' ' +
+      pad(date.getHours()) +
+      ':' +
+      pad(date.getMinutes())
+    return ret
+  }
 
   const data = {
-    labels: bloodData.map((data) => data.timestamp),
+    labels: bloodData.map((data) => getDateLabel(data.timestamp)),
     datasets: [
       {
         label: 'Glucose',

@@ -4,9 +4,28 @@ import LoginPage from './pages/LoginPage'
 import InputBloodValuesPage from './pages/InputBloodValuesPage'
 import useUserStore from './store'
 import NavBar from './components/Navbar'
+import { useEffect } from 'react'
+import { getLoginData, getStoredToken } from './utils/loginData'
+import { setToken } from './services/blood'
 
 function App() {
   const username = useUserStore((state) => state.username)
+  const setParams = useUserStore((state) => state.setParams)
+
+  useEffect(() => {
+    const token = getStoredToken()
+    console.log('effec stored token', token)
+    if (!token) {
+      return
+    }
+    setToken(token)
+
+    const loginData = getLoginData()
+    if (!loginData) {
+      return
+    }
+    setParams(loginData.username, loginData.email, token)
+  }, [setParams])
 
   return (
     <div className="App">
@@ -21,7 +40,7 @@ function App() {
               />
               <Route
                 path="/login"
-                element={<LoginPage />}
+                element={username ? <Navigate to="/blood" /> : <LoginPage />}
               />
               <Route
                 path="/blood"

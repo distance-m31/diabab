@@ -18,9 +18,7 @@ const Box: FC<BoxProps> = ({
   onClick,
 }) => {
   const handleClick = () => {
-    console.log('Box clicked')
     if (onClick) {
-      console.log('Calling on click', onClick)
       onClick()
     }
   }

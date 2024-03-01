@@ -3,6 +3,17 @@ export type LoginInput = {
   password: string
 }
 
+export interface LoginData {
+  username: string
+  email: string
+  token: string
+}
+
+export type StoredLogin = {
+  username: string
+  email: string
+}
+
 export interface RegisterInput extends LoginInput {
   email: string
   confirmPassword: string

@@ -9,9 +9,7 @@ type ButtonProps = {
 
 const Button: React.FC<ButtonProps> = ({ id, children, onClick, type }) => {
   const handleClick = () => {
-    console.log('Button clicked')
     if (onClick) {
-      console.log('Calling on click', onClick)
       onClick()
     }
   }

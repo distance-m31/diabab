@@ -2,16 +2,14 @@ import axios from 'axios'
 import { bloodDataUrl } from '../utils/config'
 import { BloodData } from '../types'
 
-type GetBloodData = {
-  data: BloodData[]
+let token: string | null = null
+
+const setToken = (newToken: string) => {
+  console.log('setting token', newToken)
+  token = newToken
 }
 
-/* type CreateBloodData = {
-  glucose: number
-  carbs: number
-}
- */
-const createBloodData = async (data: BloodData, token: string) => {
+const createBloodData = async (data: BloodData) => {
   try {
     const response = await axios.post(bloodDataUrl, data, {
       headers: {
@@ -32,8 +30,9 @@ const createBloodData = async (data: BloodData, token: string) => {
   }
 }
 
-const getBloodData = async (token: string) => {
+const getBloodData = async () => {
   try {
+    console.log('getting blood data with token', token, 'url', bloodDataUrl)
     const { data, status } = await axios.get<BloodData[]>(bloodDataUrl, {
       headers: {
         Authorization: 'Bearer ' + token,
@@ -43,7 +42,10 @@ const getBloodData = async (token: string) => {
 
     console.log(JSON.stringify(data, null, 4))
     console.log(status)
-    return data
+    return data.map((entry) => {
+      const { timestamp, ...rest } = entry
+      return { ...rest, timestamp: new Date(timestamp) }
+    })
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(error.message)
@@ -54,4 +56,4 @@ const getBloodData = async (token: string) => {
   }
 }
 
-export { createBloodData, getBloodData }
+export { createBloodData, getBloodData, setToken }

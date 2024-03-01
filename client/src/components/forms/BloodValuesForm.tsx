@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react'
+import { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -26,34 +26,53 @@ interface BloodFormProps {
 
 const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
   const [calcResult, setCalcResult] = useState<number>(0)
-
   const {
+    watch,
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm<BloodData>({
-    defaultValues: useMemo(() => props.bloodValues, [props.bloodValues]),
+    defaultValues: props.bloodValues,
     resolver: yupResolver(schema),
     mode: 'onChange',
   })
 
+  const watchAllFields = watch()
+
+  useEffect(() => {
+    console.log('Resetting form', props.bloodValues)
+    reset(props.bloodValues)
+  }, [props.bloodValues, reset])
+
+  useEffect(() => {
+    console.log('Watch all fields', watchAllFields)
+    if (
+      watchAllFields.glucose &&
+      watchAllFields.carbs &&
+      watchAllFields.carbsRatio &&
+      watchAllFields.sensitivity
+    ) {
+      const insuline = calculateInsulin(
+        6,
+        watchAllFields.glucose,
+        watchAllFields.carbs,
+        watchAllFields.carbsRatio,
+        watchAllFields.sensitivity
+      )
+      console.log('Insuline', insuline)
+      setCalcResult(insuline)
+    }
+  }, [watchAllFields])
+
   const onSubmit = async (data: BloodData) => {
-    const insuline = calculateInsulin(
-      6,
-      data.glucose,
-      data.carbs,
-      data.carbsRatio,
-      data.sensitivity
-    )
-    console.log('Insuline', insuline)
-    setCalcResult(insuline)
     props.handleBloodValues(data)
   }
 
   return (
-    <>
+    <form>
       <FormTextInput
-        label="Glucoce level"
+        label="Glucose level"
         type="number"
         name="glucose"
         error={errors.glucose}
@@ -93,7 +112,7 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
       <div>
         <Text variant="h2">You need {calcResult} units of insuline</Text>
       </div>
-    </>
+    </form>
   )
 }
 

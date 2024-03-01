@@ -9,6 +9,7 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types"],
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules"]

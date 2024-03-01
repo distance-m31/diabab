@@ -8,31 +8,31 @@ import { BloodData } from '../types'
 
 const DefaultBloodValues: BloodData[] = [
   {
-    glucose: 6,
-    carbs: 10,
-    carbsRatio: 10,
-    sensitivity: 2,
+    glucose: 0,
+    carbs: 0,
+    carbsRatio: 1,
+    sensitivity: 1,
     timestamp: new Date(),
   },
 ]
 
 const InputBloodValuesPage: FC = () => {
-  const token = useUserStore((state) => state.token)
-
   const [bloodValues, setBloodValues] =
     useState<BloodData[]>(DefaultBloodValues)
 
   useEffect(() => {
+    console.log('Getting blood data?!')
     const fetchData = async () => {
-      const bloodRecords = await getBloodData(token)
-      console.log('Getting blood data:', bloodRecords)
+      console.log('Fetching blood data')
+      const bloodRecords = await getBloodData()
+      console.log('Got blood data:', bloodRecords)
       setBloodValues(bloodRecords)
     }
     fetchData()
-  }, [token])
+  }, [])
 
   const handleBloodValues = async (bloodRecord: BloodData) => {
-    const result = await createBloodData(bloodRecord, token)
+    const result = await createBloodData(bloodRecord)
     setBloodValues([...bloodValues, bloodRecord])
     console.log('blood record add:', result)
   }

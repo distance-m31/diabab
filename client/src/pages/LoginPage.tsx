@@ -4,12 +4,11 @@ import { login } from '../services/user'
 import useUserStore from '../store'
 import { useNavigate } from 'react-router-dom'
 import Box from '../components/Box'
+import { setLoginData } from '../utils/loginData'
 
 const LoginPage = () => {
   const navigate = useNavigate()
-  const setUsername = useUserStore((state) => state.setUsername)
-  const setToken = useUserStore((state) => state.setToken)
-  const setEmail = useUserStore((state) => state.setEmail)
+  const setParams = useUserStore((state) => state.setParams)
   const username = useUserStore((state) => state.username)
 
   const handleLogin = async (data: LoginInput) => {
@@ -18,9 +17,8 @@ const LoginPage = () => {
 
     if (result) {
       console.log('setting states', result)
-      setUsername(result.username)
-      setEmail(result.email)
-      setToken(result.token)
+      setParams(result.username, result.email, result.token)
+      setLoginData(result)
     }
 
     console.log('navigating, with username', username, 'result', result)
