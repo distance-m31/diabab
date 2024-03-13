@@ -103,15 +103,16 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
         control={control}
       />
 
+      <div className="py-2">
+        <Text variant="h2">You need {calcResult} units of insuline</Text>
+      </div>
+
       <Button
         onClick={handleSubmit(onSubmit)}
         type="submit"
       >
         Submit
       </Button>
-      <div>
-        <Text variant="h2">You need {calcResult} units of insuline</Text>
-      </div>
     </form>
   )
 }

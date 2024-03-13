@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from 'react'
 import { createBloodData, getBloodData } from '../services/blood'
 import Text from '../components/Text'
-import useUserStore from '../store'
 import BloodValuesForm from '../components/forms/BloodValuesForm'
 import BarChart from '../components/BarChart'
 import { BloodData } from '../types'
+import useErrorStore from '../store/errorStore'
 
 const DefaultBloodValues: BloodData[] = [
   {
@@ -17,6 +17,8 @@ const DefaultBloodValues: BloodData[] = [
 ]
 
 const InputBloodValuesPage: FC = () => {
+  const setError = useErrorStore((state) => state.setError)
+
   const [bloodValues, setBloodValues] =
     useState<BloodData[]>(DefaultBloodValues)
 
@@ -24,17 +26,31 @@ const InputBloodValuesPage: FC = () => {
     console.log('Getting blood data?!')
     const fetchData = async () => {
       console.log('Fetching blood data')
-      const bloodRecords = await getBloodData()
-      console.log('Got blood data:', bloodRecords)
-      setBloodValues(bloodRecords)
+      try {
+        const bloodRecords = await getBloodData()
+        console.log('Got blood data:', bloodRecords)
+        setBloodValues(bloodRecords)
+      } catch (error) {
+        console.error('Error:', error)
+        if (error instanceof Error) {
+          setError(error.message)
+        }
+      }
     }
     fetchData()
   }, [])
 
   const handleBloodValues = async (bloodRecord: BloodData) => {
-    const result = await createBloodData(bloodRecord)
-    setBloodValues([...bloodValues, bloodRecord])
-    console.log('blood record add:', result)
+    try {
+      const result = await createBloodData(bloodRecord)
+      setBloodValues([...bloodValues, bloodRecord])
+      console.log('blood record add:', result)
+    } catch (error) {
+      console.error('Error:', error)
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+    }
   }
 
   const latestBloodValues = bloodValues[bloodValues.length - 1]

@@ -1,13 +1,12 @@
-//require('dotenv').config()
 import * as logger from './logger'
 import * as dotenv from 'dotenv'
-//dotenv.config({ path: __dirname + '/.env'}) 
+
 const path = process.cwd() + '/.env'
 console.log('path', path)
 dotenv.config({ path }) 
 
 const JWT_SECRET = process.env.SECRET
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3003
 const MIN_PASSWORD_LENGTH = 8
 
 logger.info(`ENV is ${process.env.NODE_ENV}`)

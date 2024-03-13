@@ -3,24 +3,28 @@ import { useNavigate } from 'react-router-dom'
 import SignupForm from '../components/forms/SignupForm'
 import { RegisterInput } from '../types'
 import { createUser } from '../services/user'
-import useUserStore from '../store'
+import useUserStore from '../store/userStore'
+import useErrorStore from '../store/errorStore'
 
 const SignupPage: FC = () => {
   const navigate = useNavigate()
-  const setUsername = useUserStore((state) => state.setUsername)
-  const setToken = useUserStore((state) => state.setToken)
-  const setEmail = useUserStore((state) => state.setEmail)
+  const setParams = useUserStore((state) => state.setParams)
+  const setError = useErrorStore((state) => state.setError)
 
   const handleSignup = async (data: RegisterInput) => {
     console.log('signup', data)
-    const result = await createUser(data)
-    console.log(result)
-    if (result) {
-      setUsername(result.username)
-      setEmail(result.email)
-      setToken(result.token)
+    try {
+      const result = await createUser(data)
+      if (result) {
+        setParams(result.username, result.email, result.token)
+      }
+      navigate('/')
+    } catch (error) {
+      console.error('Error:', error)
+      if (error instanceof Error) {
+        setError(error.message)
+      }
     }
-    navigate('/')
   }
 
   return (

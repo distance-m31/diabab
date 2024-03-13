@@ -17,7 +17,14 @@ const Text: React.FC<TextProps> = ({ children, variant, ...props }) => {
         </h1>
       )
     case 'h2':
-      return <h2 {...props}>{children}</h2>
+      return (
+        <h2
+          className="font-bold py-2 px-0"
+          {...props}
+        >
+          {children}
+        </h2>
+      )
     case 'h3':
       return <h3 {...props}>{children}</h3>
     case 'h4':

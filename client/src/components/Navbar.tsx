@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import Box from './Box'
 import Text from './Text'
-import useUserStore from '../store'
+import useUserStore from '../store/userStore'
 import Button from './Button'
 
 const NavBar: FC = () => {
@@ -9,7 +9,7 @@ const NavBar: FC = () => {
   const token = useUserStore((state) => state.token)
   const userMessage = () => {
     if (username) {
-      return `User ${username} has logged in ${token}.`
+      return `User ${username} has logged in.`
     }
     return 'No user logged in'
   }

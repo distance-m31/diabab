@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: diabdb
+    ports:
+      - 2345:5432
+      
+  server:
+    image: diab_server
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+      SECRET: really_super_secret
+      DATABASE_URL: postgres://postgres:postgres123@db:5432/diabdb
+      PORT: 3003
+    ports:
+      - 3000:3003

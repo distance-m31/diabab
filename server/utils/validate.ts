@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { AnyZodObject } from 'zod'
 
 export const bodyValidate = (schema: AnyZodObject) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return async (req: any, res: any, next: any) => {
     try {
       await schema.parseAsync(req.body)
