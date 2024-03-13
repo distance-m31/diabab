@@ -1,0 +1,28 @@
+{
+  "compierOptions":
+  {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "output",
+    "esModuleInterop": true,
+    "lib": ["es2021"],
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "ES2021",
+    
+    "allowJs": false,
+    "alwaysStrict": true,
+    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    
+    "typeRoots": ["node_modules/@types"],
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "output"]
+}

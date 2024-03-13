@@ -1,7 +1,7 @@
 import request from 'supertest'
 import app from '../../index'
 import { prismaClient } from '../../utils/dbconnect'
-import { getHash } from '../../utils/pwtoken'}
+import { getHash } from '../../utils/pwtoken'
 
 describe('Login API', () => {
   beforeAll(async () => {
