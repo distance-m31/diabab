@@ -25,7 +25,6 @@ export const createUser = async (data: RegisterData) => {
     if (axios.isAxiosError(error)) {
       console.error(error.message)
       throw new Error(error.message)
-      //return error.message
     }
 
     console.error(error)
@@ -46,7 +45,6 @@ export async function login(data: LoginData) {
     if (axios.isAxiosError(error)) {
       console.error(error.message)
       throw new Error(error.message)
-      //return error.message
     }
     console.error(error)
     return error

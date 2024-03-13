@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import Box from './Box'
 import Text from './Text'
-import useUserStore from '../store'
+import useUserStore from '../store/userStore'
 import Button from './Button'
 
 const NavBar: FC = () => {

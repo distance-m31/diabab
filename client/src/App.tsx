@@ -1,9 +1,12 @@
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
+
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import InputBloodValuesPage from './pages/InputBloodValuesPage'
-import useUserStore from './store'
+import useUserStore from './store/userStore'
 import NavBar from './components/Navbar'
+import Error from './components/Error'
+
 import { useEffect } from 'react'
 import { getLoginData, getStoredToken } from './utils/loginData'
 import { setToken } from './services/blood'
@@ -33,6 +36,7 @@ function App() {
       <div className="min-h-full h-screen flex justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <BrowserRouter>
+            <Error />
             <Routes>
               <Route
                 path="/signup"
