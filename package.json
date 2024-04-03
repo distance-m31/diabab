@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "build_front": "rm -fr front_build && cd ../client && npm run build && cp -r dist ../front_build",
+    "build_back": "rm -fr server_build &&  cd server && tsc -p . && cp -r output ../server_build",
+    "docker:build": "docker build -t diabapp .",
+    "build": "npm run build_front && npm run build_back"
+  }
+}

@@ -41,12 +41,10 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
   const watchAllFields = watch()
 
   useEffect(() => {
-    console.log('Resetting form', props.bloodValues)
     reset(props.bloodValues)
   }, [props.bloodValues, reset])
 
   useEffect(() => {
-    console.log('Watch all fields', watchAllFields)
     if (
       watchAllFields.glucose &&
       watchAllFields.carbs &&
@@ -60,7 +58,6 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
         watchAllFields.carbsRatio,
         watchAllFields.sensitivity
       )
-      console.log('Insuline', insuline)
       setCalcResult(insuline)
     }
   }, [watchAllFields])

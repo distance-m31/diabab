@@ -48,7 +48,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
   }
 
   return (
-    <div style={{ margin: 'auto', width: '50%' }}>
+    <div className="login_form">
       <Text variant="h1"> Sign in</Text>
       <FormTextInput
         label="Username"
@@ -77,7 +77,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
         id="create-new-button"
         onClick={() => navigate('/signup')}
       >
-        Create a New Account
+        New Account
       </Button>
     </div>
   )

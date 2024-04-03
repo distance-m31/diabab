@@ -1,13 +1,7 @@
 import axios from 'axios'
 import { bloodDataUrl } from '../utils/config'
 import { BloodData } from '../types'
-
-let token: string | null = null
-
-const setToken = (newToken: string) => {
-  console.log('setting token', newToken)
-  token = newToken
-}
+import { token } from '../utils/token'
 
 const createBloodData = async (data: BloodData) => {
   try {
@@ -56,4 +50,4 @@ const getBloodData = async () => {
   }
 }
 
-export { createBloodData, getBloodData, setToken }
+export { createBloodData, getBloodData }

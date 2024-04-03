@@ -1,0 +1,29 @@
+# Build stage
+FROM node:21 AS build-stage
+ARG name
+WORKDIR /usr/src/app
+
+# Copy both client and server to the build container
+COPY . .
+
+# Install client packages
+WORKDIR /usr/src/app/client
+RUN npm ci
+# Install server packages
+WORKDIR /usr/src/app/server
+RUN npm ci
+# Build both client and server according to the build script in package.json
+RUN npm run build
+
+FROM node:21
+ENV NODE_ENV=production
+WORKDIR /usr/src/app
+COPY  --from=build-stage /usr/src/build .
+#COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+#RUN npm install --production --silent && mv node_modules ../
+#COPY . .
+EXPOSE 3003
+RUN chown -R node /usr/src/app
+USER node
+RUN npx prisma generate
+CMD ["npm", "start"]

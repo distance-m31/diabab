@@ -4,7 +4,7 @@ export const setLoginData = (data: LoginData) => {
   const storedData: StoredLogin = { username: data.username, email: data.email }
   localStorage.setItem('diabapp-login', JSON.stringify(storedData))
   localStorage.setItem('diabapp-token', data.token)
-  console.log('login data set', data)
+  console.log('Login data set to', data)
 }
 
 export const getStoredToken = () => {

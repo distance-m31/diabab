@@ -65,18 +65,22 @@ loginRouter.post(
 )
 
 loginRouter.post('/', bodyValidate(loginUserSchema), async (req, res) => {
-  logger.info('Logging in', JSON.stringify(req.body, null, 4))
+  logger.info('Logging router, log in.', JSON.stringify(req.body, null, 4))
   const user = await prismaClient.user.findUnique({
     where: {
       username: req.body.username,
     },
   })
   if (!user) {
-    return res.status(401).json({ error: 'invalid username or password' })
+    return res
+      .status(401)
+      .json({ error: 'Invalid username or password, user not found!' })
   }
   const passwordCorrect = await pwCompare(req.body.password, user.passwordHash)
   if (!passwordCorrect) {
-    return res.status(401).json({ error: 'invalid username or password' })
+    return res
+      .status(401)
+      .json({ error: 'invalid username or password, pw incorrect' })
   }
   return res.json({
     username: user.username,

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --files index.ts",
-    "build_front": "rm -fr dist && cd ../client && npm run build && cp -r dist ../server && tsc -p .",
+    "build_front": "rm -fr build/frontend && cd ../client && npm run build && mkdir -p ..server/build && cp -r dist ../server/build/frontend",
     "build_back": "tsc -p .",
     "build": "npm run build_front && npm run build_back",
     "lint": "eslint . --ext .js,.ts",
