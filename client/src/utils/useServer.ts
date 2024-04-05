@@ -1,37 +1,39 @@
 import { useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
-import { token } from './token'
 import { ApiFetchHook } from '../types'
 import { ApiPostHook } from '../types'
 
-const headers = (useAuth: boolean) =>
+const headers = (useAuth: boolean, token: string) =>
   useAuth
     ? { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
     : { 'Content-Type': 'application/json' }
 
-export const useFetchApi = <T>(url: string): ApiFetchHook<T> => {
-  const [isLoading, setIsLoading] = useState(true)
+export const useFetchApi = <T>(url: string, token: string): ApiFetchHook<T> => {
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   const fetchData = async <T>(useAuth: boolean) => {
     setIsLoading(true)
+
     try {
       const response: AxiosResponse<T> = await axios.get<T>(url, {
-        headers: headers(useAuth),
+        headers: headers(useAuth, token),
       })
+
       setIsLoading(false)
       return response.data
     } catch (error) {
       setIsLoading(false)
 
       if (axios.isAxiosError(error)) {
-        console.error(error.message)
-        setError(new Error(error.message))
+        const errorResponse = error.response
+        setError(
+          new Error(errorResponse ? errorResponse.data?.error : error.message)
+        )
+      } else {
+        setError(new Error('Unknown error'))
       }
 
-      if (error instanceof Error) {
-        setError(error as Error | null)
-      }
       return null
     }
   }
@@ -39,27 +41,34 @@ export const useFetchApi = <T>(url: string): ApiFetchHook<T> => {
   return { fetchData, isLoading, error }
 }
 
-export const usePostApi = <T, R>(url: string): ApiPostHook<T, R> => {
+export const usePostApi = <T, R>(
+  url: string,
+  token: string
+): ApiPostHook<T, R> => {
   const [isPosting, setIsPosting] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   const postData = async <T, R>(data: R, useAuth: boolean) => {
     setIsPosting(true)
+
     try {
       const response: AxiosResponse<T> = await axios.post<T>(url, data, {
-        headers: headers(useAuth),
+        headers: headers(useAuth, token),
       })
-      console.log('headers', headers(useAuth))
+
       setIsPosting(false)
       return response.data
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setIsPosting(false)
-        console.error(error.message)
-        setError(new Error(error.message))
-      }
       setIsPosting(false)
-      setError(error as Error | null)
+
+      if (axios.isAxiosError(error)) {
+        const errorResponse = error.response
+        setError(
+          new Error(errorResponse ? errorResponse.data?.error : error.message)
+        )
+      } else {
+        setError(new Error('Unknown error'))
+      }
     }
     return null
   }

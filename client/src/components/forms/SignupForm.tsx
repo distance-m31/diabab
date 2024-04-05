@@ -1,13 +1,16 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
+import Box from '../Box'
 import Button from '../Button'
+import FormTextInput from './FormTextInput'
 import Divider from '../Divider'
 import Text from '../Text'
-import FormTextInput from './FormTextInput'
-import { useNavigate } from 'react-router-dom'
+
 import { RegisterInput } from '../../types'
 
 const schema = yup.object({
@@ -53,55 +56,66 @@ const SignupForm: React.FC<RegisterProps> = ({ handleLogin }) => {
   })
 
   const onSubmit = (data: RegisterInput) => {
-    console.log('comes here', data)
     handleLogin(data)
   }
-
   return (
-    <div style={{ margin: 'auto', width: '50%' }}>
-      <Text variant="h5"> Sign in</Text>
-      <FormTextInput
-        label="Username"
-        name="username"
-        error={errors.username}
-        control={control}
-      />
-      <FormTextInput
-        label="Email"
-        name="email"
-        error={errors.email}
-        control={control}
-      />
-      <FormTextInput
-        label="Password"
-        name="password"
-        type="password"
-        error={errors.password}
-        control={control}
-      />
-      <FormTextInput
-        label="Confirm password"
-        name="confirmPassword"
-        type="password"
-        error={errors.confirmPassword}
-        control={control}
-      />
-      <Button
-        id="login-button"
-        onClick={handleSubmit(onSubmit)}
-        type="submit"
+    <div style={{ width: '25rem' }}>
+      <Box
+        type="shadow"
+        subClassName="bg-blue-500 justify-center mt-10 mb-0 rounded-t-lg"
       >
-        Submit
-      </Button>
+        <Text
+          variant="h2"
+          subClassName="text-white pt-1 pb-1"
+        >
+          Sign up to DiabApp
+        </Text>
+      </Box>
+      <Box type="shadow">
+        <FormTextInput
+          label="Username"
+          name="username"
+          error={errors.username}
+          control={control}
+        />
+        <FormTextInput
+          label="Email"
+          name="email"
+          error={errors.email}
+          control={control}
+        />
+        <FormTextInput
+          label="Password"
+          name="password"
+          type="password"
+          error={errors.password}
+          control={control}
+        />
+        <FormTextInput
+          label="Confirm password"
+          name="confirmPassword"
+          type="password"
+          error={errors.confirmPassword}
+          control={control}
+        />
+        <Divider />
+        <Button
+          id="login-button"
+          onClick={handleSubmit(onSubmit)}
+          type="submit"
+        >
+          Submit
+        </Button>
 
-      <Divider />
-      <Text variant="h5">Have an account?</Text>
-      <Button
-        id="create-new-button"
-        onClick={() => navigate('/login')}
-      >
-        Login
-      </Button>
+        <Divider />
+        <Text variant="h5">Already have an account?</Text>
+        <Button
+          id="create-new-button"
+          onClick={() => navigate('/login')}
+        >
+          Login
+        </Button>
+      </Box>
     </div>
   )
 }

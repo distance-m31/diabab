@@ -1,15 +1,14 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 
+import MainPage from './pages/MainPage'
 import SignupPage from './pages/SignupPage'
 import LoginPage from './pages/LoginPage'
 import InputBloodValuesPage from './pages/InputBloodValuesPage'
 import useUserStore from './store/userStore'
-import NavBar from './components/Navbar'
 import Error from './components/Error'
 
 import { getLoginData, getStoredToken } from './utils/loginData'
-import { setToken } from './utils/token'
 import './App.css'
 
 function App() {
@@ -18,22 +17,19 @@ function App() {
 
   useEffect(() => {
     const token = getStoredToken()
-    console.log('App stored token', token)
     if (!token) {
       return
     }
-    setToken(token)
 
     const loginData = getLoginData()
     if (!loginData) {
       return
     }
     setParams(loginData.username, loginData.email, token)
-  }, [])
+  }, [setParams])
 
   return (
     <div className="App">
-      {username && <NavBar />}
       <BrowserRouter>
         <Error />
         <Routes>
@@ -43,17 +39,15 @@ function App() {
           />
           <Route
             path="/login"
-            element={username ? <Navigate to="/blood" /> : <LoginPage />}
+            element={<LoginPage />}
           />
           <Route
             path="/blood"
-            element={
-              username ? <InputBloodValuesPage /> : <Navigate to="/login" />
-            }
+            element={username ? <InputBloodValuesPage /> : <Navigate to="/" />}
           />
           <Route
             path="/"
-            element={username ? <Navigate to="/blood" /> : <LoginPage />}
+            element={username ? <Navigate to="/blood" /> : <MainPage />}
           />
           <Route
             path="*"
