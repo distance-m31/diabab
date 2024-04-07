@@ -42,8 +42,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
   return (
     <div>
       <Box
-        type="shadow"
-        subClassName="bg-blue-500 justify-center mt-10 mb-0 rounded-t-lg"
+        type="none"
+        subClassName="bg-blue-400 mt-10 mb-0 rounded-t-lg"
       >
         <Text
           variant="h2"
@@ -66,6 +66,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
           error={errors.password}
           control={control}
         />
+        <Divider />
         <Button
           id="login-button"
           onClick={handleSubmit(onSubmit)}

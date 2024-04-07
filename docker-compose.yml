@@ -1,0 +1,33 @@
+version: "3.4"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: diabapp
+    ports:
+      - 6000:5432
+
+  server:
+    image: diab_server
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      NODE_ENV: production
+      SECRET: ${SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

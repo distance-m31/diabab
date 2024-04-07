@@ -5,6 +5,7 @@ import { z } from 'zod'
 
 import { Router } from 'express'
 import { bodyValidate } from '../utils/validate'
+
 const loginRouter = Router()
 
 const createUserSchema = z.object({
@@ -28,14 +29,13 @@ loginRouter.post(
   '/createuser',
   bodyValidate(createUserSchema),
   async (req, res) => {
-    logger.info('Creating user', JSON.stringify(req.body, null, 4))
     const user = await prismaClient.user.findUnique({
       where: {
         username: req.body.username,
       },
     })
     if (user) {
-      return res.status(401).json({ error: 'Username taken' })
+      return res.status(401).json({ error: 'Username taken, try another one!' })
     }
 
     const passwordHash = await getHash(req.body.password)
@@ -47,11 +47,6 @@ loginRouter.post(
           passwordHash: passwordHash,
         },
       })
-      logger.info(
-        'User created',
-        JSON.stringify(user, null, 4),
-        tokenFromUser(user.username, user.id.toString())
-      )
       return res.json({
         username: user.username,
         email: user.email,
@@ -59,13 +54,12 @@ loginRouter.post(
       })
     } catch (error) {
       logger.exError('Error', error)
-      return res.status(400).json({ error: 'error perror' + error })
+      return res.status(400).json({ error: 'Unknown error ' + error })
     }
   }
 )
 
 loginRouter.post('/', bodyValidate(loginUserSchema), async (req, res) => {
-  logger.info('Logging router, log in.', JSON.stringify(req.body, null, 4))
   const user = await prismaClient.user.findUnique({
     where: {
       username: req.body.username,
@@ -78,9 +72,7 @@ loginRouter.post('/', bodyValidate(loginUserSchema), async (req, res) => {
   }
   const passwordCorrect = await pwCompare(req.body.password, user.passwordHash)
   if (!passwordCorrect) {
-    return res
-      .status(401)
-      .json({ error: 'invalid username or password, pw incorrect' })
+    return res.status(401).json({ error: 'Invalid username or password!' })
   }
   return res.json({
     username: user.username,

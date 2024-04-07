@@ -61,8 +61,8 @@ const SignupForm: React.FC<RegisterProps> = ({ handleLogin }) => {
   return (
     <div style={{ width: '25rem' }}>
       <Box
-        type="shadow"
-        subClassName="bg-blue-500 justify-center mt-10 mb-0 rounded-t-lg"
+        type="none"
+        subClassName="bg-blue-400 justify-center mt-10 mb-0 rounded-t-lg"
       >
         <Text
           variant="h2"

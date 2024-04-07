@@ -63,6 +63,15 @@ export const usePostApi = <T, R>(
 
       if (axios.isAxiosError(error)) {
         const errorResponse = error.response
+        if (errorResponse?.data.name === 'ZodError') {
+          setError(
+            new Error(
+              'Field validation error, check your input lengths and types!'
+            )
+          )
+          return null
+        }
+
         setError(
           new Error(errorResponse ? errorResponse.data?.error : error.message)
         )

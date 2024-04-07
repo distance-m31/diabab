@@ -21,7 +21,6 @@ const bloodRecordSchema = z.object({
 
 bloodRouter.get('/', userValidate, async (req, res) => {
   const userId = req.currentUser!.id
-
   const entries = await prismaClient.bloodRecord.findMany({
     where: { userId: userId },
   })
@@ -38,8 +37,6 @@ bloodRouter.post(
   userValidate,
   bodyValidate(bloodRecordSchema),
   async (req, res) => {
-    console.log('POST /blood')
-    console.log(req.body)
     const userId = req.currentUser!.id
 
     const record = await prismaClient.bloodRecord.create({

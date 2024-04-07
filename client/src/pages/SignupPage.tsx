@@ -25,7 +25,6 @@ const SignupPage: FC = () => {
 
   useEffect(() => {
     if (error) {
-      console.log('error', error)
       setError(error.message)
     }
   }, [error, setError])

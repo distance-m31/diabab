@@ -43,7 +43,10 @@ const Box: FC<BoxProps> = ({
         <div
           id={id}
           onClick={handleClick}
-          className="border-2 border-blue-900 shadow-lg rounded-sm py-2 px-3"
+          className={
+            'border-2 border-blue-900 shadow-lg rounded-sm py-5 px-10 ' +
+            (subClassName ? subClassName : '')
+          }
         >
           {children}
         </div>
@@ -53,7 +56,7 @@ const Box: FC<BoxProps> = ({
         <div
           id={id}
           onClick={handleClick}
-          className={subClassName ? subClassName : ''}
+          className={'py-5 px-10 ' + (subClassName ? subClassName : '')}
         >
           {children}
         </div>

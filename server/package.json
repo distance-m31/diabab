@@ -1,11 +1,11 @@
 {
   "scripts": {
     "dev": "NODE_ENV=development ts-node-dev --files index.ts",
-    "build_front": "rm -fr build/frontend && cd ../client && npm run build && mkdir -p ..server/build && cp -r dist ../server/build/frontend",
-    "build_back": "tsc -p .",
-    "build": "npm run build_front && npm run build_back",
+    "build": "rm -fr ./build/* && tsc -p .",
     "lint": "eslint . --ext .js,.ts",
-    "start": "NODE_ENV=production node output/index.js",
+    "start": "NODE_ENV=production node index.js",
+    "start:build": "NODE_ENV=production node build/index.js",
+    "start:migrate:prod": "prisma migrate deploy && npm run start",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "ts-node": "ts-node"
