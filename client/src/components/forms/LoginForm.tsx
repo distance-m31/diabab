@@ -9,18 +9,11 @@ import Text from '../Text'
 import FormTextInput from './FormTextInput'
 import { useNavigate } from 'react-router-dom'
 import { LoginInput } from '../../types'
+import Box from '../Box'
 
 const schema = yup.object({
-  username: yup
-    .string()
-    //.min(4, ({ min }) => `Username must be at least ${min} characters.`)
-    //.max(30, ({ max }) => `Username must be no more than ${max} characters.`)
-    .required('Username is required'),
-  password: yup
-    .string()
-    //.min(5, ({ min }) => `Password must be at least ${min} characters.`)
-    //.max(50, ({ max }) => `Password must be no more than ${max} characters.`)
-    .required('Password is required'),
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
 })
 
 interface LoginFormProps {
@@ -43,42 +36,54 @@ const LoginForm: React.FC<LoginFormProps> = ({ handleLogin }) => {
   })
 
   const onSubmit = (data: LoginInput) => {
-    console.log('comes here', data)
     handleLogin(data)
   }
 
   return (
-    <div style={{ margin: 'auto', width: '50%' }}>
-      <Text variant="h1"> Sign in</Text>
-      <FormTextInput
-        label="Username"
-        name="username"
-        error={errors.username}
-        control={control}
-      />
-      <FormTextInput
-        label="Password"
-        name="password"
-        type="password"
-        error={errors.password}
-        control={control}
-      />
-      <Button
-        id="login-button"
-        onClick={handleSubmit(onSubmit)}
-        type="submit"
+    <div>
+      <Box
+        type="none"
+        subClassName="bg-blue-400 mt-10 mb-0 rounded-t-lg"
       >
-        Login
-      </Button>
+        <Text
+          variant="h2"
+          subClassName="text-white pt-1 pb-1"
+        >
+          Sign in to DiabApp
+        </Text>
+      </Box>
+      <Box type="shadow">
+        <FormTextInput
+          label="Username"
+          name="username"
+          error={errors.username}
+          control={control}
+        />
+        <FormTextInput
+          label="Password"
+          name="password"
+          type="password"
+          error={errors.password}
+          control={control}
+        />
+        <Divider />
+        <Button
+          id="login-button"
+          onClick={handleSubmit(onSubmit)}
+          type="submit"
+        >
+          Login
+        </Button>
 
-      <Divider />
-      <Text variant="h5">Do not have an account?</Text>
-      <Button
-        id="create-new-button"
-        onClick={() => navigate('/signup')}
-      >
-        Create a New Account
-      </Button>
+        <Divider />
+        <Text variant="h5">Do not have an account?</Text>
+        <Button
+          id="create-new-button"
+          onClick={() => navigate('/signup')}
+        >
+          New Account
+        </Button>
+      </Box>
     </div>
   )
 }

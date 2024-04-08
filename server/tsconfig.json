@@ -1,7 +1,7 @@
 {
-  "compilerOptions":{
+  "compilerOptions": {
     "target": "ES6",
-    "outDir": "output",
+    "outDir": "build",
     "module": "commonjs",
     "strict": true,
     "noUnusedLocals": true,
@@ -11,11 +11,11 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictBindCallApply": true,
-   
+
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "output"]
+  "exclude": ["node_modules", "dist", "output", "front_build"]
 }

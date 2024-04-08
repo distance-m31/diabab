@@ -4,14 +4,14 @@ interface BoxProps {
   id?: string
   children: React.ReactNode
   type?: 'shadow' | 'border' | 'none'
-  className?: string
+  subClassName?: string
   style?: React.CSSProperties
   onClick?: () => void
 }
 
 const Box: FC<BoxProps> = ({
   id,
-  className,
+  subClassName,
   children,
   style,
   type = 'none',
@@ -22,6 +22,7 @@ const Box: FC<BoxProps> = ({
       onClick()
     }
   }
+
   switch (type) {
     case 'shadow':
       return (
@@ -30,9 +31,8 @@ const Box: FC<BoxProps> = ({
           style={style}
           onClick={handleClick}
           className={
-            className
-              ? className + ' shadow-lg py-2 px-2'
-              : 'shadow-lg py-2 px-2'
+            'bg-white shadow-lg py-5 px-10 ' +
+            (subClassName ? subClassName : '')
           }
         >
           {children}
@@ -43,7 +43,10 @@ const Box: FC<BoxProps> = ({
         <div
           id={id}
           onClick={handleClick}
-          className="border-2 border-blue-900 shadow-lg rounded-sm py-2 px-3"
+          className={
+            'border-2 border-blue-900 shadow-lg rounded-sm py-5 px-10 ' +
+            (subClassName ? subClassName : '')
+          }
         >
           {children}
         </div>
@@ -53,6 +56,7 @@ const Box: FC<BoxProps> = ({
         <div
           id={id}
           onClick={handleClick}
+          className={'py-5 px-10 ' + (subClassName ? subClassName : '')}
         >
           {children}
         </div>

@@ -14,10 +14,10 @@ export const auth = async (
     throw new Error('JWT_SECRET is not set')
   }
 
-  console.log('auth middleware')
+  console.log('In auth middleware')
   const auth = req.headers['authorization']
   if (!req.headers['authorization']) {
-    console.log('No auth header')
+    console.log('No auth header found')
     return next()
   }
 

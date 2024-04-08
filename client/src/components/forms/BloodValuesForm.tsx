@@ -12,11 +12,28 @@ import { BloodData } from '../../types'
 import { calculateInsulin } from '../../utils/insulinCalc'
 
 const schema = yup.object().shape({
-  glucose: yup.number().moreThan(0).lessThan(100).required(),
-  sensitivity: yup.number().moreThan(0).required(),
-  carbs: yup.number().moreThan(0).required(),
-  carbsRatio: yup.number().moreThan(0).required(),
-  timestamp: yup.date().required(),
+  glucose: yup
+    .number()
+    .moreThan(0)
+    .lessThan(100)
+    .required()
+    .typeError('Glucose must be a number'),
+  sensitivity: yup
+    .number()
+    .moreThan(0)
+    .required()
+    .typeError('Sensitivity must be a number'),
+  carbs: yup
+    .number()
+    .moreThan(0)
+    .required()
+    .typeError('Carbohydrates must be a number'),
+  carbsRatio: yup
+    .number()
+    .moreThan(0)
+    .required()
+    .typeError('Carbohydrates ratio must be a number'),
+  timestamp: yup.string().required(), // yup.date().required(),
 })
 
 interface BloodFormProps {
@@ -41,12 +58,10 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
   const watchAllFields = watch()
 
   useEffect(() => {
-    console.log('Resetting form', props.bloodValues)
     reset(props.bloodValues)
   }, [props.bloodValues, reset])
 
   useEffect(() => {
-    console.log('Watch all fields', watchAllFields)
     if (
       watchAllFields.glucose &&
       watchAllFields.carbs &&
@@ -60,7 +75,6 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
         watchAllFields.carbsRatio,
         watchAllFields.sensitivity
       )
-      console.log('Insuline', insuline)
       setCalcResult(insuline)
     }
   }, [watchAllFields])
@@ -72,7 +86,7 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
   return (
     <form>
       <FormTextInput
-        label="Glucose level"
+        label="Blood glucose level (mmol/L)"
         type="number"
         name="glucose"
         error={errors.glucose}
@@ -80,7 +94,7 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
       />
 
       <FormTextInput
-        label="Carbs"
+        label="Carbohydrates (in grams)"
         type="number"
         name="carbs"
         error={errors.carbs}
@@ -88,7 +102,15 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
       />
 
       <FormTextInput
-        label="Sensitivity"
+        label="Carbohydarate ratio"
+        type="number"
+        name="carbsRatio"
+        error={errors.carbsRatio}
+        control={control}
+      />
+
+      <FormTextInput
+        label="Sensitivity factor"
         type="number"
         name="sensitivity"
         error={errors.sensitivity}
@@ -96,23 +118,18 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
       />
 
       <FormTextInput
-        label="Carbs ratio"
-        type="number"
-        name="carbsRatio"
-        error={errors.carbsRatio}
+        label="Intake time"
+        type="datetime-local"
+        name="timestamp"
+        error={errors.timestamp}
         control={control}
       />
 
       <div className="py-2">
-        <Text variant="h2">You need {calcResult} units of insuline</Text>
+        <Text variant="h3">You need {calcResult} units of insuline.</Text>
       </div>
 
-      <Button
-        onClick={handleSubmit(onSubmit)}
-        type="submit"
-      >
-        Submit
-      </Button>
+      <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
     </form>
   )
 }

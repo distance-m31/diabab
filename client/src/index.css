@@ -1,3 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@font-face {
+  font-family: 'Ovo-Regular';
+  src: local('Ovo-Regular'), url(./fonts/Ovo-Regular.ttf) format('truetype');
+}
