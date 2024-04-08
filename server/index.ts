@@ -16,6 +16,9 @@ app.use('/', express.static(FRONTEND_PATH))
 app.use('/api/login', loginRouter)
 app.use('/api/blooddata', bloodRouter)
 app.use('/health', syshealthRouter)
+app.get('*', (_req, res) => {
+  res.redirect('/')
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`)
