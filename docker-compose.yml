@@ -12,7 +12,9 @@ services:
       POSTGRES_DB: diabapp
     ports:
       - 6000:5432
-
+    networks:
+      - diabapp_network
+     
   server:
     image: diab_server
     build:
@@ -28,6 +30,11 @@ services:
       - 8080:8080
     depends_on:
       - db
-
+    networks:
+      - diabapp_network
+        
 volumes:
   postgres_data:
+
+networks:
+  diabapp_network:
