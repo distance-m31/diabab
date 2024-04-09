@@ -17,6 +17,7 @@ import { bloodDataUrl } from '../utils/config'
 import { BloodData } from '../types'
 
 const convertToDateTimeLocalString = (date: Date) => {
+  console.log('date:', date)
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const day = date.getDate().toString().padStart(2, '0')
@@ -48,6 +49,7 @@ const InputBloodValuesPage: FC = () => {
     isLoading,
     error: fetchError,
   } = useFetchApi<BloodData[]>(bloodDataUrl, token)
+
   const {
     postData,
     isPosting,
@@ -100,7 +102,7 @@ const InputBloodValuesPage: FC = () => {
       true
     )
     if (result) {
-      setHistoryBloodValues(prepareData([...historyBloodValues, result])) // to result?
+      setHistoryBloodValues(prepareData([...historyBloodValues, result]))
     }
   }
 
@@ -108,7 +110,7 @@ const InputBloodValuesPage: FC = () => {
     <div>
       <NavBar />
       {<Waiting isWaiting={isLoading || isPosting} />}
-      <div className="grid grid-cols-3 gap-4 p-4">
+      <div className="flex flex-wrap gap-4 p-4 m-4">
         <Box type="shadow">
           <Text
             variant="h2"
@@ -123,7 +125,7 @@ const InputBloodValuesPage: FC = () => {
         </Box>
         <Box
           type="shadow"
-          subClassName="col-span-2"
+          subClassName="flex-1 min-w-80"
         >
           <BarChart bloodData={historyBloodValues} />
         </Box>

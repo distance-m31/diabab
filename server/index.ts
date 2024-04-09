@@ -6,6 +6,7 @@ import loginRouter from './controllers/login'
 import bloodRouter from './controllers/blood'
 import syshealthRouter from './controllers/syshealth'
 import { FRONTEND_PATH, PORT } from './utils/config'
+import * as logger from './utils/logger'
 
 const app = express()
 app.use(express.json())
@@ -21,7 +22,7 @@ app.get('*', (_req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`)
+  logger.info(`Server is running on port ${PORT}.`)
 })
 
 export default app

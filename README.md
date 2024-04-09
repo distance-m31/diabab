@@ -15,9 +15,7 @@ The frontend (see figure 1) has been coded with Typescript, Tailwind CSS, React,
 
 # Current limitations
 
-- The UI is not yet suitable for small displays.
 - The data display history scrolling has not been implemented yet.
-- There is a minor bug in the history date display.
 - The initialization of the table structure of the database currenly requires one
   to run <code>npx prisma migrate deploy</code> from within the server container,
   the automation of this step is pending.
