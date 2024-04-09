@@ -1,4 +1,4 @@
-# Web application for calculating insuling dosages, for demo only, not for treatment descision of any kind!
+# A simple web application for calculating insuling dosages, for demo only, not for treatment decisions of any kind!
 
 This simple web app calculates insuline dosages based on current measured blood glucose level (mmol/l), carbohydrate intake (grams), personal insuline sensitivity factor and carbohydate factor (insuline to carb ratio). It stores previously used values to a PostgresSQL database. The app is currently meant to either run in development mode locally or from a pair of Docker containers for the server and the Postgresql (see: https://cygnusx1.mywire.org). A docker compose file is used to set up the service with both containers. This way of running PostgreSQL is of course meant for a small scale demo app only and not for real production use.
 
