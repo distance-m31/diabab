@@ -38,7 +38,7 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
   const getDateLabel = (dateString: string) => {
     const date = new Date(dateString)
     const ret =
-      pad(date.getDay()) +
+      pad(date.getDate()) +
       '.' +
       pad(date.getMonth() + 1) +
       '.' +
@@ -49,7 +49,7 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
   const getTimeLabel = (dateString: string) => {
     const date = new Date(dateString)
     const ret =
-      pad(date.getDay()) +
+      pad(date.getDate()) +
       '/' +
       pad(date.getMonth() + 1) +
       ' ' +
