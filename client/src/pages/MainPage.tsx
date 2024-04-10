@@ -16,7 +16,7 @@ const MainPage = () => {
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4 mx-10">
+      <div className="flex flex-wrap mx-10">
         <div className="flex-1">
           <Text
             variant="h2"

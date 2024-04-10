@@ -17,7 +17,6 @@ import { bloodDataUrl } from '../utils/config'
 import { BloodData } from '../types'
 
 const convertToDateTimeLocalString = (date: Date) => {
-  console.log('date:', date)
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
   const day = date.getDate().toString().padStart(2, '0')
@@ -125,7 +124,7 @@ const InputBloodValuesPage: FC = () => {
         </Box>
         <Box
           type="shadow"
-          subClassName="flex-1 min-w-80"
+          subClassName="flex-1 min-w-[220px]"
         >
           <BarChart bloodData={historyBloodValues} />
         </Box>
