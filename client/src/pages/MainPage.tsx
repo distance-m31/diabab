@@ -38,8 +38,9 @@ const MainPage = () => {
           <img
             src={insuling}
             style={{
-              height: '600px',
+              height: '500px',
               marginTop: '40px',
+              marginLeft: '10px',
               borderRadius: '50px',
             }}
           />
