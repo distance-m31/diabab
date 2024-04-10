@@ -32,7 +32,7 @@ const NavBar: FC = () => {
   return (
     <Box
       type="shadow"
-      subClassName="flex flex-row justify-between sticky top-0 bg-gradient-to-r from-blue-500 to-cyan-400 py-5 px-10"
+      subClassName="flex flex-row justify-between sticky top-0 bg-gradient-to-r from-blue-500 to-cyan-200 py-5 px-10"
     >
       <Text
         variant="h1"

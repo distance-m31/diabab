@@ -138,7 +138,7 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
     },
     layout: {
       padding: {
-        left: 5,
+        left: 2,
         right: 5,
         top: 10,
         bottom: 5,
