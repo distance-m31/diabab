@@ -14,9 +14,10 @@ services:
       - 6000:5432
     networks:
       - diabapp_network
-     
+
   server:
     image: diab_server
+    restart: always
     build:
       context: .
       dockerfile: ./Dockerfile.prod
@@ -32,7 +33,7 @@ services:
       - db
     networks:
       - diabapp_network
-        
+
 volumes:
   postgres_data:
 
