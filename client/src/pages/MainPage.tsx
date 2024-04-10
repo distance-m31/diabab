@@ -16,7 +16,7 @@ const MainPage = () => {
 
   return (
     <div>
-      <div className="flex flex-wrap mx-10">
+      <div className="flex flex-wrap mx-10 max-w-[1000px]">
         <div className="flex-1">
           <Text
             variant="h2"
@@ -34,12 +34,12 @@ const MainPage = () => {
             <Button onClick={goToSignup}>Create Account</Button>
           </div>
         </div>
-        <div>
+        <div className="min-w-[400px]">
           <img
             src={insuling}
             style={{
               height: '600px',
-              margin: '40px',
+              marginTop: '40px',
               borderRadius: '50px',
             }}
           />
