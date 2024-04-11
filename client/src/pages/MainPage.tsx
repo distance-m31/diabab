@@ -16,8 +16,8 @@ const MainPage = () => {
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-wrap mx-10 max-w-[1000px] mt-20">
-        <div className="flex-1">
+      <div className="flex flex-wrap mx-10 max-w-[900px] mt-20">
+        <div className="flex-1 ml-5 mr-5 mb-4">
           <Text
             variant="h2"
             subClassName="text-cyan-500 py-20"
