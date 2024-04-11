@@ -6,10 +6,10 @@ The frontend (see figure 1) has been coded with Typescript, Tailwind CSS, React,
 
 The docker compose & Docker file combo uses environment variables, which need to be defined in .env files in the main directory and in the client subdirectory so that the following variables correspond to one's installation:
 
-- DATABASE_URL this refers to the database running in the container, an example "postgresql://postgres:postgres123@db:5432/diabapp?schema=public"
-- SECRET this is the web token secret, an example "dfsalkhgdsf_23p0"
-- PORT this is the server listening port, for example: 8080
-- VITE_API_URL this is the url the client tries to connect to and needs to be available also in the client .env file, it needs the /api part: for example "https://myserver.com/api"
+- DATABASE_URL, this refers to the database running in the container, an example "postgresql://postgres:postgrespassword@db:5432/diabapp?schema=public"
+- SECRET, this is the web token secret, an example "dfsalkhgdsf_23p0"
+- PORT, this is the server listening port, for example: 8080
+- VITE_API_URL, this is the url the client tries to connect to and needs to be available also in the client .env file, it needs the /api part: for example "https://myserver.com/api"
 
 <br>
 
@@ -23,4 +23,5 @@ The docker compose & Docker file combo uses environment variables, which need to
 # Current limitations
 
 - The data display history scrolling has not been implemented yet.
+- Data display enhancements for smaller display pending.
 - Updating tests pending.
