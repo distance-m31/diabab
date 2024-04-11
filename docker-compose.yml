@@ -14,6 +14,11 @@ services:
       - 6000:5432
     networks:
       - diabapp_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   server:
     image: diab_server
@@ -30,7 +35,8 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - diabapp_network
 

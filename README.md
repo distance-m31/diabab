@@ -2,7 +2,14 @@
 
 This simple web app calculates insuline dosages based on current measured blood glucose level (mmol/l), carbohydrate intake (grams), personal insuline sensitivity factor and carbohydate factor (insuline to carb ratio). It stores previously used values to a PostgresSQL database. The app is currently meant to either run in development mode locally or from a pair of Docker containers for the server and the Postgresql (see: https://cygnusx1.mywire.org). A docker compose file is used to set up the service with both containers. This way of running PostgreSQL is of course meant for a small scale demo app only and not for real production use.
 
-The front end (see figure 1) has been coded with Typescript, Tailwind CSS, React, while using some additional packages for form handling, such as React Hook Form and Yup. State management is impelemted with the help of Zustand. The back end has been coded with Typescript and Node.js. Prisma ORM is used to connect to the PostgreSQL database. The app uses basic password authentication.
+The frontend (see figure 1) has been coded with Typescript, Tailwind CSS, React, while using some additional packages for form handling, such as React Hook Form and Yup. State management is impelemted with the help of Zustand. The backend has been coded with Typescript and Node.js. Prisma ORM is used to connect to the PostgreSQL database. The app uses basic password authentication.
+
+The docker compose & Docker file combo uses environment variables, which need to be defined in .env files in the main directory and in the client subdirectory so that the following variables correspond to one's installation:
+
+- DATABASE_URL this refers to the database running in the container, an example "postgresql://postgres:postgres123@db:5432/diabapp?schema=public"
+- SECRET this is the web token secret, an example "dfsalkhgdsf_23p0"
+- PORT this is the server listening port, for example: 8080
+- VITE_API_URL this is the url the client tries to connect to and needs to be available also in the client .env file, it needs the /api part: for example "https://myserver.com/api"
 
 <br>
 
@@ -16,7 +23,4 @@ The front end (see figure 1) has been coded with Typescript, Tailwind CSS, React
 # Current limitations
 
 - The data display history scrolling has not been implemented yet.
-- The initialization of the table structure of the database currenly requires one
-  to run <code>npx prisma migrate deploy</code> from within the server container,
-  the automation of this step is pending.
-- More tests are required.
+- Updating tests pending.
