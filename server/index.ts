@@ -17,8 +17,9 @@ app.use('/', express.static(FRONTEND_PATH))
 app.use('/api/login', loginRouter)
 app.use('/api/blooddata', bloodRouter)
 app.use('/health', syshealthRouter)
-app.get('*', (_req, res) => {
-  res.redirect('/')
+app.get('*', (_req, _res) => {
+  express.static(FRONTEND_PATH)
+  //res.redirect('/')
 })
 
 app.listen(PORT, () => {

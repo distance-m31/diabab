@@ -44,4 +44,6 @@ EXPOSE ${PORT}
 RUN chown -R node /usr/src/app
 USER node
 
-CMD ["npm", "run", "start:migrate:prod"]
+RUN npx prisma generate
+RUN npx prisma migrate deploy
+CMD ["npm", "run", "start"]
