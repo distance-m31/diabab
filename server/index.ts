@@ -17,6 +17,7 @@ app.use('/', express.static(FRONTEND_PATH))
 app.use('/api/login', loginRouter)
 app.use('/api/blooddata', bloodRouter)
 app.use('/health', syshealthRouter)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.get('*', (_req, _res) => {
   express.static(FRONTEND_PATH)
   //res.redirect('/')
