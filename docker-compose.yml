@@ -1,0 +1,47 @@
+version: "3.4"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: diabapp
+    ports:
+      - 6000:5432
+    networks:
+      - diabapp_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  server:
+    image: diab_server
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
+      NODE_ENV: production
+      SECRET: ${SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - diabapp_network
+
+volumes:
+  postgres_data:
+
+networks:
+  diabapp_network:

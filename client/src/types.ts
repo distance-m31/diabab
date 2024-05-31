@@ -14,8 +14,10 @@ export type StoredLogin = {
   email: string
 }
 
-export interface RegisterInput extends LoginInput {
+export interface RegisterInput {
+  username: string
   email: string
+  password: string
   confirmPassword: string
 }
 
@@ -24,5 +26,17 @@ export interface BloodData {
   carbs: number
   carbsRatio: number
   sensitivity: number
-  timestamp: Date
+  timestamp: string
+}
+
+export interface ApiFetchHook<T> {
+  fetchData: (useAuth: boolean) => Promise<T | null>
+  isLoading: boolean
+  error: Error | null
+}
+
+export interface ApiPostHook<T, R> {
+  postData: (data: R, useAuth: boolean) => Promise<T | null>
+  isPosting: boolean
+  error: Error | null
 }

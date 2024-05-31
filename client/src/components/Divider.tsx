@@ -5,7 +5,7 @@ type DividerProps = {
 }
 
 const Divider: React.FC<DividerProps> = ({ children }) => {
-  return <div>{children}</div>
+  return <div className="py-2">{children}</div>
 }
 
 export default Divider

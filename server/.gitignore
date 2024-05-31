@@ -1,2 +1,8 @@
 .env
+.vscode
 /node_modules
+/dist
+/coverage
+/build
+/output
+

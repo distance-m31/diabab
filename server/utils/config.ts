@@ -1,28 +1,27 @@
-//require('dotenv').config()
 import * as logger from './logger'
 import * as dotenv from 'dotenv'
-//dotenv.config({ path: __dirname + '/.env'}) 
+
 const path = process.cwd() + '/.env'
-console.log('path', path)
-dotenv.config({ path }) 
+dotenv.config({ path })
 
 const JWT_SECRET = process.env.SECRET
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3003
 const MIN_PASSWORD_LENGTH = 8
+let FRONTEND_PATH = './build/front_build'
+let DATABASE_URL = process.env.DEV_DATABASE_URL
+
+if (process.env.NODE_ENV === 'production') {
+  FRONTEND_PATH = './front_build'
+  DATABASE_URL = process.env.PROD_DATABASE_URL
+  logger.info('Production mode')
+} else {
+  logger.info('Development mode')
+  FRONTEND_PATH = './build/front_build'
+}
 
 logger.info(`ENV is ${process.env.NODE_ENV}`)
+logger.info(`FRONTEND_PATH is ${FRONTEND_PATH}`)
+logger.info(`DATABASE_URL is ${DATABASE_URL}`)
+logger.info(`JWT_SECRET is ${JWT_SECRET}`)
 
-let MONGODB_URI = process.env.DEV_MONGODB_URI
-
-if (process.env.NODE_ENV === 'test') {
-  MONGODB_URI = process.env.TEST_MONGODB_URI
-} else if (process.env.NODE_ENV === 'production') {
-  MONGODB_URI = process.env.PROD_MONGODB_URI
-}
-
-export {
-  MIN_PASSWORD_LENGTH,
-  MONGODB_URI,
-  PORT,
-  JWT_SECRET,
-}
+export { FRONTEND_PATH, DATABASE_URL, MIN_PASSWORD_LENGTH, PORT, JWT_SECRET }

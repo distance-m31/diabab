@@ -4,7 +4,11 @@ export const setLoginData = (data: LoginData) => {
   const storedData: StoredLogin = { username: data.username, email: data.email }
   localStorage.setItem('diabapp-login', JSON.stringify(storedData))
   localStorage.setItem('diabapp-token', data.token)
-  console.log('login data set', data)
+}
+
+export const clearLoginData = () => {
+  localStorage.removeItem('diabapp-login')
+  localStorage.removeItem('diabapp-token')
 }
 
 export const getStoredToken = () => {
@@ -14,6 +18,5 @@ export const getStoredToken = () => {
 export const getLoginData = () => {
   const loginData = localStorage.getItem('diabapp-login')
   const loginDataAsObj: StoredLogin = loginData ? JSON.parse(loginData) : null
-  console.log('Storage login data', loginDataAsObj)
   return loginDataAsObj
 }

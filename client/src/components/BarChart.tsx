@@ -14,6 +14,9 @@ import {
 } from 'chart.js'
 
 import { BloodData } from '../types'
+import { calculateInsulin } from '../utils/insulinCalc'
+
+import Text from './Text'
 
 ChartJS.register(
   Title,
@@ -32,14 +35,23 @@ interface BarChartProps {
 const BarChart: FC<BarChartProps> = ({ bloodData }) => {
   const pad = (number: number) => ('0' + number).slice(-2)
 
-  const getDateLabel = (date: Date) => {
-    //return getDateFromString(date.toString())
+  const getDateLabel = (dateString: string) => {
+    const date = new Date(dateString)
     const ret =
-      date.getFullYear() +
-      ' ' +
-      pad(date.getMonth()) +
+      pad(date.getDate()) +
+      '.' +
+      pad(date.getMonth() + 1) +
+      '.' +
+      date.getFullYear()
+    return ret
+  }
+
+  const getTimeLabel = (dateString: string) => {
+    const date = new Date(dateString)
+    const ret =
+      pad(date.getDate()) +
       '/' +
-      pad(date.getDay()) +
+      pad(date.getMonth() + 1) +
       ' ' +
       pad(date.getHours()) +
       ':' +
@@ -47,36 +59,73 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
     return ret
   }
 
-  const data = {
-    labels: bloodData.map((data) => getDateLabel(data.timestamp)),
+  const glucoseData = {
+    labels: bloodData.map((data) => getTimeLabel(data.timestamp)),
     datasets: [
       {
-        label: 'Glucose',
+        label: 'Glucose Level',
         data: bloodData.map((data) => data.glucose),
-        backgroundColor: 'rgba(190, 20, 20, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
+        backgroundColor: 'rgba(220, 220, 20, 0.6)',
+        borderColor: 'rgba(150, 150, 150, 1)',
+        borderWidth: 2,
+        barThickness: 40,
+        maxBarThickness: 50,
       },
       {
-        label: 'Carbs',
-        data: bloodData.map((data) => data.carbs / 10),
-        backgroundColor: 'rgba(10, 10, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        label: 'Calculated Insulin',
+        data: bloodData.map((data) =>
+          calculateInsulin(
+            6,
+            data.glucose,
+            data.carbs,
+            data.carbsRatio,
+            data.sensitivity
+          )
+        ),
+        backgroundColor: 'rgba(22, 220, 20, 0.6)',
+        borderColor: 'rgba(150, 150, 150, 1)',
+        borderWidth: 2,
+        barThickness: 40,
+        maxBarThickness: 50,
       },
+    ],
+  }
+
+  const carbsData = {
+    labels: bloodData.map((data) => getTimeLabel(data.timestamp)),
+    datasets: [
       {
-        label: 'Carbs Ratio',
+        label: 'Carbohydrate Intake',
+        data: bloodData.map((data) => data.carbs),
+        backgroundColor: 'rgba(10, 100, 232, 0.6)',
+        borderColor: 'rgba(150, 150, 150, 1)',
+        borderWidth: 2,
+        barThickness: 40,
+        maxBarThickness: 50,
+      },
+    ],
+  }
+
+  const calcPrm = {
+    labels: bloodData.map((data) => getTimeLabel(data.timestamp)),
+    datasets: [
+      {
+        label: 'Used Carbohydrate Ratio',
         data: bloodData.map((data) => data.carbsRatio),
-        backgroundColor: 'rgba(10, 200, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        backgroundColor: 'rgba(100, 100, 132, 0.6)',
+        borderColor: 'rgba(150, 150, 150, 1)',
+        borderWidth: 2,
+        barThickness: 40,
+        maxBarThickness: 50,
       },
       {
-        label: 'Sensitivity',
+        label: 'Used Sensitivity',
         data: bloodData.map((data) => data.sensitivity),
         backgroundColor: 'rgba(200, 200, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
+        borderColor: 'rgba(150, 150, 150, 1)',
+        borderWidth: 2,
+        barThickness: 40,
+        maxBarThickness: 50,
       },
     ],
   }
@@ -89,7 +138,7 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
     },
     layout: {
       padding: {
-        left: 5,
+        left: 2,
         right: 5,
         top: 10,
         bottom: 5,
@@ -116,7 +165,7 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
         beginAtZero: true,
         border: { display: true },
         grid: {
-          display: false, // Display grid lines for the y-axis
+          display: false, // Display grid lines for the x-axis
         },
         ticks: {
           padding: 7,
@@ -125,16 +174,36 @@ const BarChart: FC<BarChartProps> = ({ bloodData }) => {
     },
     elements: {
       bar: {
-        borderRadius: 2,
+        borderRadius: 3,
         borderWidth: 0.7,
       },
     },
   }
+  const historyLabel = () => {
+    if (bloodData.length === 0) {
+      return 'No history available'
+    }
 
+    const firstDate = bloodData[0].timestamp
+    const lastDate = bloodData[bloodData.length - 1].timestamp
+
+    return (
+      'History for ' + getDateLabel(firstDate) + ' - ' + getDateLabel(lastDate)
+    )
+  }
   return (
-    <div>
+    <div className="text-center">
+      <Text variant="h2">{historyLabel()}</Text>
       <Bar
-        data={data}
+        data={glucoseData}
+        options={options}
+      />
+      <Bar
+        data={carbsData}
+        options={options}
+      />
+      <Bar
+        data={calcPrm}
         options={options}
       />
     </div>

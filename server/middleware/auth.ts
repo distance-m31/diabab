@@ -14,21 +14,14 @@ export const auth = async (
     throw new Error('JWT_SECRET is not set')
   }
 
-  console.log('auth middleware')
   const auth = req.headers['authorization']
   if (!req.headers['authorization']) {
-    console.log('No auth header')
     return next()
   }
 
   if (auth && auth.toLocaleLowerCase().startsWith('bearer ')) {
-    console.log('Got token:', auth.substring(7))
     try {
       const decodedToken = jwt.verify(auth.substring(7), secretKey)
-
-      if (typeof decodedToken !== 'string') {
-        console.log('Got token:', decodedToken)
-      }
 
       if (typeof decodedToken === 'string') {
         throw new Error('Token messed up!')

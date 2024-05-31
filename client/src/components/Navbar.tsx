@@ -1,43 +1,45 @@
 import { FC } from 'react'
 import Box from './Box'
 import Text from './Text'
-import useUserStore from '../store'
+import useUserStore from '../store/userStore'
 import Button from './Button'
+import { useNavigate } from 'react-router-dom'
+import { clearLoginData } from '../utils/loginData'
 
 const NavBar: FC = () => {
+  const navigate = useNavigate()
+
   const username = useUserStore((state) => state.username)
   const token = useUserStore((state) => state.token)
-  const userMessage = () => {
-    if (username) {
-      return `User ${username} has logged in ${token}.`
-    }
-    return 'No user logged in'
-  }
 
   const loggedIn = () => {
     if (username && token) {
       return <Button onClick={handleLogout}>Logout</Button>
+    } else {
+      return <Button onClick={handleLogin}>Login</Button>
     }
-    return null
   }
 
   const handleLogout = () => {
     useUserStore.setState({ username: '', token: '' })
+    clearLoginData()
+  }
+
+  const handleLogin = () => {
+    navigate('/login')
   }
 
   return (
     <Box
       type="shadow"
-      style={{
-        color: 'white',
-        backgroundColor: '#1010a0',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      className="sticky top-0"
+      subClassName="flex flex-row justify-between sticky top-0 bg-gradient-to-r from-blue-500 to-cyan-200 py-5 px-10"
     >
-      <Text variant="h1">{userMessage()}</Text>
+      <Text
+        variant="h1"
+        subClassName="text-gray-100 font-bold text-2xl"
+      >
+        DiabApp
+      </Text>
       {loggedIn()}
     </Box>
   )
