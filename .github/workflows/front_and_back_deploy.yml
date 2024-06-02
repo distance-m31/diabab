@@ -10,7 +10,7 @@ env:
   REGISTRY: "10.0.2.10:32000"
   IMAGE_NAME: "diabapp"
   NAMESPACE: "redamix"
-  DOCKERFILE: "./Dockerfile"
+  DOCKERFILE: "./Dockerfile.prod"
   DOCKERCONTEXT: "."
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   TAG: "v1.0"
@@ -44,10 +44,10 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
           secrets: |
-            "VITE_API_URL=${{ vars.VITE_API_URL }}"
+            "VITE_API_URL=${{ secrets.VITE_API_URL }}"
             "NODE_ENV=production"
             "SECRET=${{ secrets.SECRET }}"
-            "PROD_DATABASE_URL=${{ vars.PROD_DATABASE_URL }}"
+            "PROD_DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
             "PORT=8080"
 
   deploy:
