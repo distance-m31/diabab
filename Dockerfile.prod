@@ -4,8 +4,10 @@ FROM node:21 AS build-stage
 # for the build process to be able to use it
 #ARG VITE_API_URL
 #ENV VITE_API_URL=$VITE_API_URL
+RUN echo > /usr/src/app/client/.env
 RUN --mount=type=secret,id=VITE_API_URL \
-    sed -i "s/VITE_API_URL=/VITE_API_URL=$(cat /run/secrets/VITE_API_URL)/" /usr/src/app/client/.env
+    echo "VITE_API_URL=$(cat /run/secrets/VITE_API_URL)" >> /usr/src/app/client/.env
+RUN cat /usr/src/app/client/.env
 
 WORKDIR /usr/src/app
 
@@ -34,14 +36,18 @@ FROM node:21 AS production-stage
 #ARG DATABASE_URL
 #ENV DATABASE_URL=$DATABASE_URL
 #ENV NODE_ENV=production
+
+RUN echo > /usr/src/app/server/.env
 RUN --mount=type=secret,id=SECRET \
-    sed -i "s/SECRET=/SECRET=$(cat /run/secrets/SECRET)/" /usr/src/app/server/.env
+    echo "SECRET=$(cat /run/secrets/SECRET)" >> /usr/src/app/server/.env
 RUN --mount=type=secret,id=PORT \
-    sed -i "s/PORT=/PORT=$(cat /run/secrets/PORT)/" /usr/src/app/server/.env
+    echo "PORT=$(cat /run/secrets/PORT)" >> /usr/src/app/server/.env
 RUN --mount=type=secret,id=DATABASE_URL \
-    sed -i "s/DATABASE_URL=/DATABASE_URL=$(cat /run/secrets/DATABASE_URL)/" /usr/src/app/server/.env
+    echo "DATABASE_URL=$(cat /run/secrets/DATABASE_URL)" >> /usr/src/app/server/.env
 RUN --mount=type=secret,id=NODE_ENV \
-    sed -i "s/NODE_ENV=/NODE_ENV=$(cat /run/secrets/NODE_ENV)/" /usr/src/app/server/.env
+    echo "NODE_ENV=$(cat /run/secrets/NODE_ENV)" >> /usr/src/app/server/.env
+
+RUN cat /usr/src/app/server/.env
 
 WORKDIR /usr/src/app
 COPY  --from=build-stage /usr/src/app/server/build .
