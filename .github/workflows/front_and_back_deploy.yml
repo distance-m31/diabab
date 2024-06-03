@@ -47,7 +47,7 @@ jobs:
             "VITE_API_URL=${{ secrets.VITE_API_URL }}"
             "NODE_ENV=production"
             "SECRET=${{ secrets.SECRET }}"
-            "PROD_DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
+            "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
             "PORT=8080"
 
   deploy:
