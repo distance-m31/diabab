@@ -14,7 +14,11 @@ env:
   DOCKERCONTEXT: "."
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   TAG: "v1.0"
-
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
+  NODE_ENV: "production"
+  SECRET: ${{ secrets.SECRET }}
+  DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+  PORT: "8080"
 jobs:
   build-and-push-image:
     runs-on: self-hosted
@@ -43,12 +47,6 @@ jobs:
           file: ${{ env.DOCKERFILE }}
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          secrets: |
-            "VITE_API_URL=${{ secrets.VITE_API_URL }}"
-            "NODE_ENV=production"
-            "SECRET=${{ secrets.SECRET }}"
-            "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
-            "PORT=8080"
 
   deploy:
     runs-on: self-hosted
