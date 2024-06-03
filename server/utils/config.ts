@@ -7,16 +7,16 @@ dotenv.config({ path })
 const JWT_SECRET = process.env.SECRET
 const PORT = process.env.PORT || 3003
 const MIN_PASSWORD_LENGTH = 8
-let FRONTEND_PATH = './build/front_build'
-let DATABASE_URL = process.env.DEV_DATABASE_URL
 
-if (process.env.NODE_ENV === 'production') {
-  FRONTEND_PATH = './front_build'
-  DATABASE_URL = process.env.PROD_DATABASE_URL
-  logger.info('Production mode')
-} else {
-  logger.info('Development mode')
+let FRONTEND_PATH = './front_build'
+let DATABASE_URL = process.env.DATABASE_URL
+
+if (process.env.NODE_ENV !== 'production') {
   FRONTEND_PATH = './build/front_build'
+  DATABASE_URL = process.env.DEV_DATABASE_URL
+  logger.info('Development mode')
+} else {
+  logger.info('Production mode')
 }
 
 logger.info(`ENV is ${process.env.NODE_ENV}`)
