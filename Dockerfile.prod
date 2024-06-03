@@ -37,24 +37,24 @@ FROM node:21 AS production-stage
 #ENV DATABASE_URL=$DATABASE_URL
 #ENV NODE_ENV=production
 
-RUN echo > /usr/src/app/server/.env
-RUN --mount=type=secret,id=SECRET \
-    echo "SECRET=$(cat /run/secrets/SECRET)" >> /usr/src/app/server/.env
-RUN --mount=type=secret,id=PORT \
-    echo "PORT=$(cat /run/secrets/PORT)" >> /usr/src/app/server/.env
-RUN --mount=type=secret,id=DATABASE_URL \
-    echo "DATABASE_URL=$(cat /run/secrets/DATABASE_URL)" >> /usr/src/app/server/.env
-RUN --mount=type=secret,id=NODE_ENV \
-    echo "NODE_ENV=$(cat /run/secrets/NODE_ENV)" >> /usr/src/app/server/.env
-
-RUN cat /usr/src/app/server/.env
-
 WORKDIR /usr/src/app
 COPY  --from=build-stage /usr/src/app/server/build .
 COPY  --from=build-stage /usr/src/app/server/package.json .
 COPY  --from=build-stage /usr/src/app/server/package-lock.json .
 COPY  --from=build-stage /usr/src/app/server/prisma ./prisma
 RUN npm ci
+
+RUN echo > .env
+RUN --mount=type=secret,id=SECRET \
+    echo "SECRET=$(cat /run/secrets/SECRET)" >> .env
+RUN --mount=type=secret,id=PORT \
+    echo "PORT=$(cat /run/secrets/PORT)" >> .env
+RUN --mount=type=secret,id=DATABASE_URL \
+    echo "DATABASE_URL=$(cat /run/secrets/DATABASE_URL)" >> .env
+RUN --mount=type=secret,id=NODE_ENV \
+    echo "NODE_ENV=$(cat /run/secrets/NODE_ENV)" >> .env
+
+RUN cat .env
 
 EXPOSE ${PORT}
 RUN chown -R node /usr/src/app
