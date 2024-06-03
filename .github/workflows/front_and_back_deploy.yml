@@ -14,10 +14,10 @@ env:
   DOCKERCONTEXT: "."
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   TAG: "v1.0"
-  VITE_API_URL: ${{ secrets.VITE_API_URL }}"
+  VITE_API_URL: ${{ secrets.VITE_API_URL }}
   NODE_ENV: "production"
-  SECRET: ${{ secrets.SECRET }}"
-  DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}"
+  SECRET: ${{ secrets.SECRET }}
+  DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
   PORT: "8080"
 jobs:
   build-and-push-image:
