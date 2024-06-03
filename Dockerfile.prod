@@ -4,10 +4,6 @@ FROM node:21 AS build-stage
 # for the build process to be able to use it
 #ARG VITE_API_URL
 #ENV VITE_API_URL=$VITE_API_URL
-RUN echo > /usr/src/app/client/.env
-RUN --mount=type=secret,id=VITE_API_URL \
-    echo "VITE_API_URL=$(cat /run/secrets/VITE_API_URL)" >> /usr/src/app/client/.env
-RUN cat /usr/src/app/client/.env
 
 WORKDIR /usr/src/app
 
@@ -17,6 +13,10 @@ COPY . .
 # Install client packages
 WORKDIR /usr/src/app/client
 RUN npm ci
+RUN echo > .env
+RUN --mount=type=secret,id=VITE_API_URL \
+    echo "VITE_API_URL=$(cat /run/secrets/VITE_API_URL)" >> .env
+RUN cat .env
 
 # Install server packages
 WORKDIR /usr/src/app/server
