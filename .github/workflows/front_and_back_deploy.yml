@@ -33,11 +33,11 @@ jobs:
         #run: "docker build --no-cache -f ${{ env.DOCKERFILE }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }} ${{ env.DOCKERCONTEXT }}"
         run: >
           docker build --no-cache  
-          -e VITE_API_URL=${{ secrets.VITE_API_URL }}
-          -e DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}
-          -e SECRET=${{ secrets.SECRET }}
-          -e PORT=${{ secrets.PORT }}
-          -e NODE_ENV=production
+          --build-arg "VITE_API_URL=${{ secrets.VITE_API_URL }}"
+          --build-arg "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
+          --build-arg "SECRET=${{ secrets.SECRET }}"
+          --build-arg "PORT=${{ secrets.PORT }}"
+          --build-arg "NODE_ENV=production"
           -f ${{ env.DOCKERFILE }}
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} ${{ env.DOCKERCONTEXT }}
 

@@ -2,8 +2,8 @@
 FROM node:21 AS build-stage
 # We need to set the backend API URL as an environment variable
 # for the build process to be able to use it
-#ARG VITE_API_URL
-#ENV VITE_API_URL=$VITE_API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /usr/src/app
 
@@ -14,8 +14,10 @@ COPY . .
 WORKDIR /usr/src/app/client
 RUN npm ci
 RUN echo > .env
-RUN --mount=type=secret,id=VITE_API_URL \
-    echo "VITE_API_URL=$(cat /run/secrets/VITE_API_URL)" >> .env
+RUN echo "VITE_API_URL=$VITE_API_URL" >> .env
+
+#RUN --mount=type=secret,id=VITE_API_URL \
+#    echo "VITE_API_URL=$(cat /run/secrets/VITE_API_URL)" >> .env
 RUN cat .env
 
 # Install server packages
@@ -29,13 +31,13 @@ RUN npm run build
 # Production stage
 FROM node:21 AS production-stage
 
-#ARG SECRET
-#ENV SECRET=$SECRET
-#ARG PORT
-#ENV PORT=$PORT
-#ARG DATABASE_URL
-#ENV DATABASE_URL=$DATABASE_URL
-#ENV NODE_ENV=production
+ARG SECRET
+ENV SECRET=$SECRET
+ARG PORT
+ENV PORT=$PORT
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 COPY  --from=build-stage /usr/src/app/server/build .
@@ -46,13 +48,22 @@ RUN npm ci
 
 RUN echo > .env
 RUN --mount=type=secret,id=SECRET \
-    echo "SECRET=$(cat /run/secrets/SECRET)" >> .env
+    echo "SECRET=$SECRET" >> .env
 RUN --mount=type=secret,id=PORT \
-    echo "PORT=$(cat /run/secrets/PORT)" >> .env
+    echo "PORT=$PORT" >> .env
 RUN --mount=type=secret,id=DATABASE_URL \
-    echo "DATABASE_URL=$(cat /run/secrets/DATABASE_URL)" >> .env
+    echo "DATABASE_URL=$DATABASE_URL" >> .env
 RUN --mount=type=secret,id=NODE_ENV \
-    echo "NODE_ENV=$(cat /run/secrets/NODE_ENV)" >> .env
+    echo "NODE_ENV=$NODE_ENV" >> .env
+
+# RUN --mount=type=secret,id=SECRET \
+#     echo "SECRET=$(cat /run/secrets/SECRET)" >> .env
+# RUN --mount=type=secret,id=PORT \
+#     echo "PORT=$(cat /run/secrets/PORT)" >> .env
+# RUN --mount=type=secret,id=DATABASE_URL \
+#     echo "DATABASE_URL=$(cat /run/secrets/DATABASE_URL)" >> .env
+# RUN --mount=type=secret,id=NODE_ENV \
+#     echo "NODE_ENV=$(cat /run/secrets/NODE_ENV)" >> .env
 
 RUN cat .env
 
