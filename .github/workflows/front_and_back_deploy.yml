@@ -29,25 +29,41 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      - name: Build docker image
+        #run: "docker build --no-cache -f ${{ env.DOCKERFILE }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }} ${{ env.DOCKERCONTEXT }}"
+        run: >
+          docker build --no-cache  
+          -e VITE_API_URL=${{ secrets.VITE_API_URL }}
+          -e DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}
+          -e SECRET=${{ secrets.SECRET }}
+          -e PORT=${{ secrets.PORT }}
+          -e NODE_ENV=production
+          -f ${{ env.DOCKERFILE }}
+          -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} ${{ env.DOCKERCONTEXT }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Push docker image to registry
+        #run: "docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }}"
+        run: "docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}"
 
-      - name: Build and push docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ env.DOCKERCONTEXT }}
-          file: ${{ env.DOCKERFILE }}
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          secrets: |
-            "VITE_API_URL=${{ secrets.VITE_API_URL }}"
-            "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
-            "SECRET=${{ secrets.SECRET }}"
-            "PORT=${{ secrets.PORT }}"
-            "NODE_ENV=production"
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+
+      # - name: Build and push docker image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: ${{ env.DOCKERCONTEXT }}
+      #     file: ${{ env.DOCKERFILE }}
+      #     push: true
+      #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      #     secrets: |
+      #       "VITE_API_URL=${{ secrets.VITE_API_URL }}"
+      #       "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
+      #       "SECRET=${{ secrets.SECRET }}"
+      #       "PORT=${{ secrets.PORT }}"
+      #       "NODE_ENV=production"
 
   deploy:
     runs-on: self-hosted
