@@ -47,14 +47,10 @@ COPY  --from=build-stage /usr/src/app/server/prisma ./prisma
 RUN npm ci
 
 RUN echo > .env
-RUN --mount=type=secret,id=SECRET \
-    echo "SECRET=$SECRET" >> .env
-RUN --mount=type=secret,id=PORT \
-    echo "PORT=$PORT" >> .env
-RUN --mount=type=secret,id=DATABASE_URL \
-    echo "DATABASE_URL=$DATABASE_URL" >> .env
-RUN --mount=type=secret,id=NODE_ENV \
-    echo "NODE_ENV=$NODE_ENV" >> .env
+RUN echo "SECRET=$SECRET" >> .env
+RUN echo "PORT=$PORT" >> .env
+RUN echo "DATABASE_URL=$DATABASE_URL" >> .env
+RUN echo "NODE_ENV=$NODE_ENV" >> .env
 
 # RUN --mount=type=secret,id=SECRET \
 #     echo "SECRET=$(cat /run/secrets/SECRET)" >> .env
