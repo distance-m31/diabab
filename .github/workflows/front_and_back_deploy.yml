@@ -13,7 +13,7 @@ env:
   DOCKERFILE: "./Dockerfile-microk8s"
   DOCKERCONTEXT: "."
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-  TAG: "v1.0"
+  TAG: "v1.1"
 jobs:
   build-and-push-image:
     runs-on: self-hosted
@@ -28,14 +28,14 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
- 
+
       - name: Create client .env file
         uses: SpicyPizza/create-envfile@v2.0
         with:
           envkey_VITE_API_URL: ${{ secrets.VITE_API_URL }}
           directory: client
           file_name: .env
-      
+
       - name: Create server .env file
         uses: SpicyPizza/create-envfile@v2.0
         with:

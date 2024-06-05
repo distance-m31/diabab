@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: diabapp-server
-          image: 10.0.2.10:32000/diabapp-server:v1.0
+          image: 10.0.2.10:32000/diabapp-server:v1.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
