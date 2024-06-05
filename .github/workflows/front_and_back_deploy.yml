@@ -28,16 +28,28 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+ 
+      - name: Create client .env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          directory: client
+          file_name: .env
+      
+      - name: Create server .env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+          envkey_SECRET: ${{ secrets.SECRET }}
+          envkey_PORT: ${{ secrets.PORT }}
+          envkey_NODE_ENV: "production"
+          directory: server
+          file_name: .env
 
       - name: Build docker image
         #run: "docker build --no-cache -f ${{ env.DOCKERFILE }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }} ${{ env.DOCKERCONTEXT }}"
         run: >
           docker build --no-cache  
-          --build-arg "VITE_API_URL=${{ secrets.VITE_API_URL }}"
-          --build-arg "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
-          --build-arg "SECRET=${{ secrets.SECRET }}"
-          --build-arg "PORT=${{ secrets.PORT }}"
-          --build-arg "NODE_ENV=production"
           -f ${{ env.DOCKERFILE }}
           -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} ${{ env.DOCKERCONTEXT }}
 
