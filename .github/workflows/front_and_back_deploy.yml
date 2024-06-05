@@ -10,7 +10,7 @@ env:
   REGISTRY: "10.0.2.10:32000"
   IMAGE_NAME: "diabapp"
   NAMESPACE: "redamix"
-  DOCKERFILE: "./Dockerfile.prod"
+  DOCKERFILE: "./Dockerfile-microk8s"
   DOCKERCONTEXT: "."
   KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
   TAG: "v1.0"
