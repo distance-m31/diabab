@@ -5,15 +5,14 @@ WORKDIR /usr/src/app
 # Copy both client and server to the build container
 COPY . .
 
+RUN npm install -g npm@10.8.1
 # Install client packages
 WORKDIR /usr/src/app/client
 RUN npm ci
-RUN cat .env
 
 # Install server packages
 WORKDIR /usr/src/app/server
 RUN npm ci
-RUN cat .env
 
 # Build both client and server according to the build script in package.json
 WORKDIR /usr/src/app
@@ -36,5 +35,4 @@ RUN chown -R node /usr/src/app
 USER node
 
 RUN npx prisma generate
-RUN npx prisma migrate deploy
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dstart"]

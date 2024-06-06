@@ -6,6 +6,7 @@
     "start": "NODE_ENV=production node index.js",
     "start:build": "NODE_ENV=production node build/index.js",
     "prisma_migrate:prod": "NODE_ENV=production npx prisma migrate deploy",
+    "dstart": "npx prisma migrate deploy && npm run start",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "ts-node": "ts-node"
