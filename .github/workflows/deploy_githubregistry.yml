@@ -59,18 +59,18 @@ jobs:
           image-tag: ${{ env.TAG }} # if ommitted will be replaced with "latest"
           dockerfile: ${{ env.DOCKERFILE }} # Provide Dockerfile path         
       
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build-and-push-image
-  #   steps:
-  #     - name: Deploy to Render
-  #       uses: gh-actions-workflows/deploy-docker-render@v1.1
-  #       with:
-  #         deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
-  #         image-url: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-  #         render-api-key: ${{ secrets.RENDER_API_KEY }}
-  #         wait-for-deployment: true
-  #     #     - name: Build docker image
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push-image
+    steps:
+      - name: Deploy to Render
+        uses: gh-actions-workflows/deploy-docker-render@v1.1
+        with:
+          deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
+          image-url: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+          render-api-key: ${{ secrets.RENDER_API_KEY }}
+          wait-for-deployment: true
+      #     - name: Build docker image
       #   #run: "docker build --no-cache -f ${{ env.DOCKERFILE }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }} ${{ env.DOCKERCONTEXT }}"
       #   run: "docker build --no-cache -f ${{ env.DOCKERFILE }} -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} ${{ env.DOCKERCONTEXT }}"
 
