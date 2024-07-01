@@ -49,7 +49,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }} # Provide GITHUB_TOKEN to login into the GitHub Packages
           image-name: ${{ env.IMAGE_NAME }} # Provide Docker image name
-          image-tag: ${{ env.TAG }} # if ommitted will be replaced with "latest"
+          #image-tag: ${{ env.TAG }} # if ommitted will be replaced with "latest"
+          image-tag: ${{ steps.version.outputs.builddate }}
+          #   #run: "docker image push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.builddate }}"
+
           dockerfile: ${{ env.DOCKERFILE }} # Provide Dockerfile path
 
   deploy:
