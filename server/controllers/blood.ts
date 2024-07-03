@@ -1,41 +1,72 @@
 import Router from 'express'
 import { prismaClient } from '../utils/dbconnect'
 import { z } from 'zod'
-import { bodyValidate, userValidate } from '../utils/validate'
+import { reqValidate, userValidate } from '../utils/validate'
+
+const bloodRecordSchema = z.object({
+  body: z.object({
+    glucose: z
+      .number({ required_error: 'glucose value is required' })
+      .gte(0)
+      .lte(100),
+    carbs: z
+      .number({ required_error: 'carbs value is required' })
+      .gte(0)
+      .lte(300),
+    carbsRatio: z.number().gte(1).lte(100),
+    sensitivity: z.number().gte(1).lte(100),
+    timestamp: z.string().datetime(),
+  }),
+})
+
+const queryRecordsSchema = z.object({
+  query: z.object({
+    lastId: z.coerce.number({ required_error: 'lastId is required' }),
+    limit: z.coerce.number({ required_error: 'limit value is required' }),
+  }),
+})
 
 const bloodRouter = Router()
 
-const bloodRecordSchema = z.object({
-  glucose: z
-    .number({ required_error: 'glucose value is required' })
-    .gte(0)
-    .lte(100),
-  carbs: z
-    .number({ required_error: 'carbs value is required' })
-    .gte(0)
-    .lte(300),
-  carbsRatio: z.number().gte(1).lte(100),
-  sensitivity: z.number().gte(1).lte(100),
-  timestamp: z.string().datetime(),
-})
+bloodRouter.get(
+  '/',
+  userValidate,
+  reqValidate(queryRecordsSchema),
+  async (req, res) => {
+    const userId = req.currentUser!.id
+    const { lastId, limit } = req.validatedData.query
+    let entries = []
 
-bloodRouter.get('/', userValidate, async (req, res) => {
-  const userId = req.currentUser!.id
-  const entries = await prismaClient.bloodRecord.findMany({
-    where: { userId: userId },
-  })
-  return res.status(201).json(
-    entries.map((entry) => {
-      const { id, userId, ...rest } = entry
-      return rest
-    })
-  )
-})
+    if (lastId === 0) {
+      entries = await prismaClient.bloodRecord.findMany({
+        where: { userId: userId },
+        take: limit,
+        orderBy: { id: 'asc' },
+      })
+    } else {
+      const take = limit
+      entries = await prismaClient.bloodRecord.findMany({
+        where: { userId: userId },
+        take: take,
+        skip: 1,
+        cursor: { id: lastId },
+        orderBy: { id: 'asc' },
+      })
+    }
+
+    return res.status(201).json(
+      entries.map((entry) => {
+        const { userId, ...rest } = entry
+        return rest
+      })
+    )
+  }
+)
 
 bloodRouter.post(
   '/',
   userValidate,
-  bodyValidate(bloodRecordSchema),
+  reqValidate(bloodRecordSchema),
   async (req, res) => {
     const userId = req.currentUser!.id
 
