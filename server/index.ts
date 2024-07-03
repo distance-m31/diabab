@@ -20,7 +20,6 @@ app.use('/health', syshealthRouter)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.get('*', (_req, _res) => {
   express.static(FRONTEND_PATH)
-  //res.redirect('/')
 })
 
 app.listen(PORT, () => {

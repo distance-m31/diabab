@@ -4,30 +4,40 @@ import { prismaClient } from '../utils/dbconnect'
 import { z } from 'zod'
 
 import { Router } from 'express'
-import { bodyValidate } from '../utils/validate'
+import { reqValidate } from '../utils/validate'
 
 const loginRouter = Router()
 
 const createUserSchema = z.object({
-  username: z.string({ required_error: 'username is required' }).min(5).max(20),
-  email: z.string({ required_error: 'email is required' }).email(),
-  password: z
-    .string({ required_error: 'password value is required' })
-    .min(5)
-    .max(20),
+  body: z.object({
+    username: z
+      .string({ required_error: 'username is required' })
+      .min(5)
+      .max(20),
+    email: z.string({ required_error: 'email is required' }).email(),
+    password: z
+      .string({ required_error: 'password value is required' })
+      .min(5)
+      .max(20),
+  }),
 })
 
 const loginUserSchema = z.object({
-  username: z.string({ required_error: 'username is required' }).min(5).max(20),
-  password: z
-    .string({ required_error: 'password value is required' })
-    .min(5)
-    .max(20),
+  body: z.object({
+    username: z
+      .string({ required_error: 'username is required' })
+      .min(5)
+      .max(20),
+    password: z
+      .string({ required_error: 'password value is required' })
+      .min(5)
+      .max(20),
+  }),
 })
 
 loginRouter.post(
   '/createuser',
-  bodyValidate(createUserSchema),
+  reqValidate(createUserSchema),
   async (req, res) => {
     const user = await prismaClient.user.findUnique({
       where: {
@@ -59,7 +69,7 @@ loginRouter.post(
   }
 )
 
-loginRouter.post('/', bodyValidate(loginUserSchema), async (req, res) => {
+loginRouter.post('/', reqValidate(loginUserSchema), async (req, res) => {
   const user = await prismaClient.user.findUnique({
     where: {
       username: req.body.username,
