@@ -8,7 +8,7 @@ import FormTextInput from './FormTextInput'
 import Button from '../Button'
 import Text from '../Text'
 
-import { BloodData } from '../../types'
+import { BloodFormData } from '../../types'
 import { calculateInsulin } from '../../utils/insulinCalc'
 
 const schema = yup.object().shape({
@@ -33,12 +33,12 @@ const schema = yup.object().shape({
     .moreThan(0)
     .required()
     .typeError('Carbohydrates ratio must be a number'),
-  timestamp: yup.string().required(), // yup.date().required(),
+  timestamp: yup.string().required(),
 })
 
 interface BloodFormProps {
-  bloodValues: BloodData
-  handleBloodValues: (data: BloodData) => void
+  bloodValues: BloodFormData
+  handleBloodValues: (data: BloodFormData) => void
 }
 
 const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
@@ -49,7 +49,7 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
     formState: { errors },
     control,
     reset,
-  } = useForm<BloodData>({
+  } = useForm<BloodFormData>({
     defaultValues: props.bloodValues,
     resolver: yupResolver(schema),
     mode: 'onChange',
@@ -79,7 +79,7 @@ const BloodValuesForm: FC<BloodFormProps> = (props: BloodFormProps) => {
     }
   }, [watchAllFields])
 
-  const onSubmit = async (data: BloodData) => {
+  const onSubmit = async (data: BloodFormData) => {
     props.handleBloodValues(data)
   }
 

@@ -8,15 +8,19 @@ const headers = (useAuth: boolean, token: string) =>
     ? { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' }
     : { 'Content-Type': 'application/json' }
 
-export const useFetchApi = <T>(url: string, token: string): ApiFetchHook<T> => {
+export const useFetchApi = <T, P>(
+  url: string,
+  token: string
+): ApiFetchHook<T, P> => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const fetchData = async <T>(useAuth: boolean) => {
+  const fetchData = async <T, P>(useAuth: boolean, param: P) => {
     setIsLoading(true)
 
     try {
       const response: AxiosResponse<T> = await axios.get<T>(url, {
+        params: param,
         headers: headers(useAuth, token),
       })
 

@@ -28,6 +28,4 @@ const Error: FC = () => {
   )
 }
 
-// <div className="relative w-full max-w-2xl max-h-full">
-// </div>
 export default Error
