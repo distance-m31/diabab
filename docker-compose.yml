@@ -25,7 +25,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./Dockerfile.prod
+      dockerfile: ./Dockerfile-with-env
     environment:
       VITE_API_URL: ${VITE_API_URL}
       NODE_ENV: production
