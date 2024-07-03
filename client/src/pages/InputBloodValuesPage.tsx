@@ -14,7 +14,8 @@ import useErrorStore from '../store/errorStore'
 import { useFetchApi, usePostApi } from '../utils/useServer'
 import { bloodDataUrl } from '../utils/config'
 
-import { BloodData } from '../types'
+import { BloodData, BloodFormData, BloodPaging } from '../types'
+import Button from '../components/Button'
 
 const convertToDateTimeLocalString = (date: Date) => {
   const year = date.getFullYear()
@@ -27,6 +28,7 @@ const convertToDateTimeLocalString = (date: Date) => {
 }
 
 const DefaultBloodValues: BloodData = {
+  id: 0,
   glucose: 0,
   carbs: 0,
   carbsRatio: 10,
@@ -36,10 +38,10 @@ const DefaultBloodValues: BloodData = {
 
 const InputBloodValuesPage: FC = () => {
   const setError = useErrorStore((state) => state.setError)
-
   const [currentBloodValues, setCurrentBloodValues] =
     useState<BloodData>(DefaultBloodValues)
 
+  const [lastBrowsedId, setLastBrowsedId] = useState(0)
   const [historyBloodValues, setHistoryBloodValues] = useState<BloodData[]>([])
   const token = useUserStore((state) => state.token)
 
@@ -47,13 +49,13 @@ const InputBloodValuesPage: FC = () => {
     fetchData,
     isLoading,
     error: fetchError,
-  } = useFetchApi<BloodData[]>(bloodDataUrl, token)
+  } = useFetchApi<BloodData[], BloodPaging>(bloodDataUrl, token)
 
   const {
     postData,
     isPosting,
     error: postError,
-  } = usePostApi<BloodData, BloodData>(bloodDataUrl, token)
+  } = usePostApi<BloodData, BloodFormData>(bloodDataUrl, token)
 
   useEffect(() => {
     if (fetchError) {
@@ -67,22 +69,29 @@ const InputBloodValuesPage: FC = () => {
     }
   }, [postError, setError])
 
-  useEffect(() => {
-    const getData = async () => {
-      const bloodRecords = await fetchData(true)
-      if (!bloodRecords || bloodRecords.length === 0) {
-        return
-      }
-      const lastRecord = bloodRecords[bloodRecords.length - 1]
-      setHistoryBloodValues(prepareData(bloodRecords))
-      setCurrentBloodValues({
-        ...DefaultBloodValues,
-        sensitivity: lastRecord.sensitivity,
-        carbsRatio: lastRecord.carbsRatio,
-      })
+  const pageItemLimit = 5
+
+  const getData = async (lastId: number, limit: number) => {
+    const bloodRecords = await fetchData(true, {
+      lastId: lastId,
+      limit: limit,
+    })
+
+    if (!bloodRecords || bloodRecords.length === 0) {
+      return
     }
 
-    getData()
+    const lastRecord = bloodRecords[bloodRecords.length - 1]
+    setHistoryBloodValues(prepareData(bloodRecords))
+    setCurrentBloodValues({
+      ...DefaultBloodValues,
+      sensitivity: lastRecord.sensitivity,
+      carbsRatio: lastRecord.carbsRatio,
+    })
+  }
+
+  useEffect(() => {
+    getData(0, -pageItemLimit)
   }, [])
 
   const prepareData = (data: BloodData[]) => {
@@ -92,7 +101,7 @@ const InputBloodValuesPage: FC = () => {
     })
   }
 
-  const handleSubmitBloodValues = async (bloodRecord: BloodData) => {
+  const handleSubmitBloodValues = async (bloodRecord: BloodFormData) => {
     const result = await postData(
       {
         ...bloodRecord,
@@ -100,9 +109,28 @@ const InputBloodValuesPage: FC = () => {
       },
       true
     )
-    if (result) {
-      setHistoryBloodValues(prepareData([...historyBloodValues, result]))
-    }
+
+    if (result) await getData(0, -pageItemLimit)
+  }
+
+  const scrollLeft = async () => {
+    const historyLen = historyBloodValues.length
+    const currentId =
+      historyLen >= pageItemLimit
+        ? historyBloodValues[0].id
+        : historyBloodValues[historyLen - 1].id
+    setLastBrowsedId(currentId)
+    await getData(currentId, -pageItemLimit)
+  }
+
+  const scrollRight = async () => {
+    const historyLen = historyBloodValues.length
+    const currentId =
+      historyLen >= pageItemLimit
+        ? historyBloodValues[historyLen - 1].id
+        : historyBloodValues[0].id
+    setLastBrowsedId(currentId)
+    await getData(currentId, pageItemLimit)
   }
 
   return (
@@ -124,9 +152,18 @@ const InputBloodValuesPage: FC = () => {
         </Box>
         <Box
           type="shadow"
-          subClassName="flex-1 min-w-[220px]"
+          subClassName="flex-1 min-w-[320px]"
         >
           <BarChart bloodData={historyBloodValues} />
+          <div className="flex justify-center">
+            <Button
+              disabled={lastBrowsedId === 0}
+              onClick={() => scrollLeft()}
+            >
+              Left
+            </Button>
+            <Button onClick={() => scrollRight()}>Right</Button>
+          </div>
         </Box>
       </div>
     </div>

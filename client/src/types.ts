@@ -21,7 +21,13 @@ export interface RegisterInput {
   confirmPassword: string
 }
 
+export interface BloodPaging {
+  lastId: number
+  limit: number
+}
+
 export interface BloodData {
+  id: number
   glucose: number
   carbs: number
   carbsRatio: number
@@ -29,8 +35,10 @@ export interface BloodData {
   timestamp: string
 }
 
-export interface ApiFetchHook<T> {
-  fetchData: (useAuth: boolean) => Promise<T | null>
+export type BloodFormData = Omit<BloodData, 'id'>
+
+export interface ApiFetchHook<T, P> {
+  fetchData: (useAuth: boolean, param: P) => Promise<T | null>
   isLoading: boolean
   error: Error | null
 }
