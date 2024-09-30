@@ -14,7 +14,14 @@ import useErrorStore from '../store/errorStore'
 import { useFetchApi, usePostApi } from '../utils/useServer'
 import { bloodDataUrl } from '../utils/config'
 
-import { BloodData, BloodFormData, BloodPaging } from '../types'
+import {
+  BloodData,
+  BloodFormData,
+  BloodPaging,
+  ScrollDirection,
+  ScrollInfo,
+} from '../types'
+
 import Button from '../components/Button'
 
 const convertToDateTimeLocalString = (date: Date) => {
@@ -41,7 +48,11 @@ const InputBloodValuesPage: FC = () => {
   const [currentBloodValues, setCurrentBloodValues] =
     useState<BloodData>(DefaultBloodValues)
 
-  const [lastBrowsedId, setLastBrowsedId] = useState(0)
+  const [scrollInfo, setLastBrowsed] = useState<ScrollInfo>({
+    lastId: 0,
+    direction: ScrollDirection.RIGHT,
+  })
+
   const [historyBloodValues, setHistoryBloodValues] = useState<BloodData[]>([])
   const token = useUserStore((state) => state.token)
 
@@ -78,20 +89,19 @@ const InputBloodValuesPage: FC = () => {
     })
 
     if (!bloodRecords || bloodRecords.length === 0) {
-      return
+      return []
     }
 
-    const lastRecord = bloodRecords[bloodRecords.length - 1]
-    setHistoryBloodValues(prepareData(bloodRecords))
-    setCurrentBloodValues({
-      ...DefaultBloodValues,
-      sensitivity: lastRecord.sensitivity,
-      carbsRatio: lastRecord.carbsRatio,
-    })
+    return bloodRecords
+  }
+
+  const getInitialData = async () => {
+    const bloodRecords = await getData(0, -pageItemLimit)
+    setHistoryData(bloodRecords)
   }
 
   useEffect(() => {
-    getData(0, -pageItemLimit)
+    getInitialData()
   }, [])
 
   const prepareData = (data: BloodData[]) => {
@@ -110,27 +120,63 @@ const InputBloodValuesPage: FC = () => {
       true
     )
 
-    if (result) await getData(0, -pageItemLimit)
+    if (result) await getInitialData()
+  }
+
+  const setHistoryData = (bloodRecords: BloodData[]) => {
+    const lastRecord = bloodRecords[bloodRecords.length - 1]
+    setHistoryBloodValues(prepareData(bloodRecords))
+    setCurrentBloodValues({
+      ...DefaultBloodValues,
+      sensitivity: lastRecord.sensitivity,
+      carbsRatio: lastRecord.carbsRatio,
+    })
   }
 
   const scrollLeft = async () => {
-    const historyLen = historyBloodValues.length
-    const currentId =
-      historyLen >= pageItemLimit
-        ? historyBloodValues[0].id
-        : historyBloodValues[historyLen - 1].id
-    setLastBrowsedId(currentId)
-    await getData(currentId, -pageItemLimit)
+    const currentId = historyBloodValues[0].id
+    const bloodRecords = await getData(currentId, -pageItemLimit)
+    if (
+      bloodRecords.length < pageItemLimit &&
+      scrollInfo.direction === ScrollDirection.LEFT //&&
+      //scrollInfo.lastId === currentId
+    ) {
+      return
+    }
+
+    console.log(
+      bloodRecords.length,
+      pageItemLimit,
+      scrollInfo.direction,
+      scrollInfo.lastId,
+      currentId
+    )
+
+    setLastBrowsed({ lastId: currentId, direction: ScrollDirection.LEFT })
+    setHistoryData(bloodRecords)
   }
 
   const scrollRight = async () => {
-    const historyLen = historyBloodValues.length
-    const currentId =
-      historyLen >= pageItemLimit
-        ? historyBloodValues[historyLen - 1].id
-        : historyBloodValues[0].id
-    setLastBrowsedId(currentId)
-    await getData(currentId, pageItemLimit)
+    const currentId = historyBloodValues[historyBloodValues.length - 1].id
+    const bloodRecords = await getData(currentId, pageItemLimit)
+
+    console.log(
+      bloodRecords.length,
+      pageItemLimit,
+      scrollInfo.direction,
+      scrollInfo.lastId,
+      currentId
+    )
+
+    if (
+      bloodRecords.length < pageItemLimit &&
+      scrollInfo.direction === ScrollDirection.RIGHT //&&
+      //scrollInfo.lastId === currentId
+    ) {
+      return
+    }
+    setLastBrowsed({ lastId: currentId, direction: ScrollDirection.RIGHT })
+    setHistoryData(bloodRecords)
   }
 
   return (
@@ -157,12 +203,17 @@ const InputBloodValuesPage: FC = () => {
           <BarChart bloodData={historyBloodValues} />
           <div className="flex justify-center">
             <Button
-              disabled={lastBrowsedId === 0}
+              disabled={false}
               onClick={() => scrollLeft()}
             >
               Left
             </Button>
-            <Button onClick={() => scrollRight()}>Right</Button>
+            <Button
+              disabled={false}
+              onClick={() => scrollRight()}
+            >
+              Right
+            </Button>
           </div>
         </Box>
       </div>
