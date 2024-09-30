@@ -48,3 +48,13 @@ export interface ApiPostHook<T, R> {
   isPosting: boolean
   error: Error | null
 }
+
+export enum ScrollDirection {
+  LEFT = 'left',
+  RIGHT = 'right',
+}
+
+export type ScrollInfo = {
+  lastId: number
+  direction: ScrollDirection
+}

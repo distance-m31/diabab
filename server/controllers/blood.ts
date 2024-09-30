@@ -37,22 +37,27 @@ bloodRouter.get(
     const { lastId, limit } = req.validatedData.query
     let entries = []
 
+    const take = limit
+
     if (lastId === 0) {
       entries = await prismaClient.bloodRecord.findMany({
         where: { userId: userId },
-        take: limit,
+        take: take,
         orderBy: { id: 'asc' },
       })
     } else {
-      const take = limit
       entries = await prismaClient.bloodRecord.findMany({
         where: { userId: userId },
         take: take,
-        skip: 1,
+        skip: 0,
         cursor: { id: lastId },
         orderBy: { id: 'asc' },
       })
     }
+
+    console.log('-------------------------------------------------------------')
+    console.log('Dumping entries:')
+    console.log(entries.map((entry) => entry.id).join(', '))
 
     return res.status(201).json(
       entries.map((entry) => {
